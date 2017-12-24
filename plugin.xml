@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="0.0.1">
+  <name>Firebase UI Authentication</name>
+  <description>Adds support for Firebase Authentication to your Cordova/PhoneGap apps.</description>
+  <license>Apache 2.0</license>
+  <keywords>firebase,cordova,authentication</keywords>
+  <author>Richard Windley</author>
+  <repo>https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth.git</repo>
+  <issue>https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth/issues</issue>
+
+  <engines>
+    <engine name="cordova" version="&gt;=6.0.0"/>
+    <engine name="cordova-android" version="&gt;=4.0.0"/>
+    <engine name="cordova-plugman" version="&gt;=4.2.0"/>
+  </engines>
+
+  <dependency id="cordova-plugin-firebase-hooks"/>
+
+  <platform name="browser">
+    <js-module src="www/browser/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+      <clobbers target="FirebaseUIAuth"/>
+    </js-module>
+  </platform>
+
+  <platform name="ios">
+    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+      <clobbers target="FirebaseUIAuth"/>
+    </js-module>
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="FirebaseUIAuthPlugin">
+        <param name="ios-package" value="FirebaseUIAuthPlugin" onload="true" />
+      </feature>
+    </config-file>
+    <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
+    <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
+    <pod id="Firebase"/>
+    <pod id="Firebase/Auth"/>
+    <pod id="FirebaseUI/Google"/>
+    <pod id="FirebaseUI/Facebook"/>
+  </platform>
+
+  <platform name="android">
+    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+      <clobbers target="FirebaseUIAuth"/>
+    </js-module>
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="FirebaseUIAuthPlugin">
+        <param name="android-package" value="uk.co.reallysmall.cordova.plugin.firebase.ui.auth.FirebaseUIAuthPlugin"/>
+        <param name="onload" value="true"/>
+      </feature>
+    </config-file>
+
+    <preference name="ANDROID_FIREBASE_VERSION" default="11.6.0"/>
+    <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
+    <preference name="FACEBOOK_LOGIN_PROTOCOL_SCHEME" default="tbr"/>
+
+    <framework src="com.firebaseui:firebase-ui-auth:3.1.0"/>
+    <framework src="com.facebook.android:facebook-android-sdk:4.27.0"/>
+
+    <source-file src="src/android/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/FirebaseUIAuthPlugin.java" target-dir="src/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/"/>
+
+    <config-file target="res/values/strings.xml" parent="/*">
+      <string name="facebook_application_id">$FACEBOOK_APPLICATION_ID</string>
+      <string name="facebook_login_protocol_scheme">$FACEBOOK_LOGIN_PROTOCOL_SCHEME</string>
+    </config-file>
+  </platform>
+</plugin>

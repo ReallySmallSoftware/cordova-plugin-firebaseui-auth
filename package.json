@@ -1,0 +1,33 @@
+{
+  "name": "cordova-plugin-firebaseui-auth",
+  "version": "0.0.1",
+  "description": "Adds support for Firebase UI authentication.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth-multi.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "firebase",
+    "authentication",
+    "auth"
+  ],
+  "author": "Richard Windley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth/issues"
+  },
+  "homepage": "https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth",
+  "dependencies": {
+    "elementtree": "^0.1.6",
+    "plist": "^1.2.0",
+    "shelljs": "^0.7.2",
+    "xcode": "^0.8.9",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "libxmljs": "^0.18.4"
+  }
+}
