@@ -4,14 +4,12 @@ const PLUGIN_NAME = 'FirebaseUIAuthPlugin';
 function FirebaseUIAuth(options) {
 
     options = options || {};
-    var allowDomains = options.allowDomains ? [].concat(options.allowDomains) : null;
-    exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [allowDomains]);
+    exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [options]);
 
     this.getToken = function(success, failure) {
 
         if(window.Promise) {
             return new Promise(function (resolve, reject) {
-
                 exec(resolve, reject, PLUGIN_NAME, 'getToken', []);
             });
         } else {
