@@ -18,19 +18,19 @@
   <dependency id="cordova-plugin-android-fragmentactivity"/>
 
   <platform name="browser">
-    <js-module src="www/browser/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+    <js-module src="www/browser/firebaseUIAuthPlugin.js" name="FirebaseUIAuth">
       <clobbers target="FirebaseUIAuth"/>
     </js-module>
   </platform>
 
   <platform name="ios">
-    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuth">
       <clobbers target="FirebaseUIAuth"/>
     </js-module>
 
     <config-file target="config.xml" parent="/*">
-      <feature name="FirebaseUIAuthPlugin">
-        <param name="ios-package" value="FirebaseUIAuthPlugin" onload="true" />
+      <feature name="FirebaseUIAuth">
+        <param name="ios-package" value="FirebaseUIAuth" onload="true"/>
       </feature>
     </config-file>
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
@@ -42,12 +42,12 @@
   </platform>
 
   <platform name="android">
-    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuthPlugin">
+    <js-module src="www/firebaseUIAuthPlugin.js" name="FirebaseUIAuth">
       <clobbers target="FirebaseUIAuth"/>
     </js-module>
 
     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="FirebaseUIAuthPlugin">
+      <feature name="FirebaseUIAuth">
         <param name="android-package" value="uk.co.reallysmall.cordova.plugin.firebase.ui.auth.FirebaseUIAuthPlugin"/>
         <param name="onload" value="true"/>
       </feature>
@@ -56,15 +56,66 @@
     <preference name="ANDROID_FIREBASE_VERSION" default="11.6.0"/>
     <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
     <preference name="FACEBOOK_LOGIN_PROTOCOL_SCHEME" default="tbr"/>
+    <preference name="COLOR_PRIMARY" default="#ffffff"/>
+    <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
+    <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
+    <preference name="COLOR_ACCENT" default="#7C4DFF"/>
+    <preference name="COLOR_SECONDARY" default="#FFC107"/>
+    <preference name="COLOR_CONTROL" default="#ffffff"/>
+    <preference name="COLOR_BACKGROUND" default="#000000"/>
 
     <framework src="com.firebaseui:firebase-ui-auth:3.1.0"/>
     <framework src="com.facebook.android:facebook-android-sdk:4.27.0"/>
 
     <source-file src="src/android/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/FirebaseUIAuthPlugin.java" target-dir="src/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/"/>
 
+    <hook type="before_plugin_install" src="scripts/android/beforePluginInstall.js"/>
+
     <config-file target="res/values/strings.xml" parent="/*">
       <string name="facebook_application_id">$FACEBOOK_APPLICATION_ID</string>
       <string name="facebook_login_protocol_scheme">$FACEBOOK_LOGIN_PROTOCOL_SCHEME</string>
+    </config-file>
+
+    <config-file target="res/values/color.xml" parent="/*">
+      <color name="firebaseUiColorPrimary">$COLOR_PRIMARY</color>
+      <color name="firebaseUiColorPrimaryDark">$COLOR_DARK_PRIMARY</color>
+      <color name="firebaseUiColorPrimaryLight">$COLOR_LIGHT_PRIMARY</color>
+      <color name="firebaseUiColorAccent">$COLOR_ACCENT</color>
+      <color name="firebaseUiColorSecondary">$COLOR_SECONDARY</color>
+      <color name="firebaseUiColorControl">$COLOR_CONTROL</color>
+      <color name="firebaseUiColorBackground">$COLOR_BACKGROUND</color>
+    </config-file>
+
+    <config-file target="res/values/styles.xml" parent="/*">
+      <style name="FirebaseUILogonTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/firebaseUiColorPrimary</item>
+        <item name="colorPrimaryDark">@color/firebaseUiColorPrimaryDark</item>
+        <item name="colorAccent">@color/firebaseUiColorAccent</item>
+        <item name="colorButtonNormal">@color/firebaseUiColorAccent</item>
+        <item name="colorControlNormal">@color/firebaseUiColorControl</item>
+        <item name="colorControlActivated">@color/firebaseUiColorControl</item>
+        <item name="colorControlHighlight">@color/firebaseUiColorControl</item>
+        <item name="android:textColor">@color/firebaseUiColorControl</item>
+        <item name="android:textColorPrimary">@color/firebaseUiColorControl</item>
+        <item name="android:textColorSecondary">@color/firebaseUiColorControl</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorHint">@color/firebaseUiColorControl</item>
+        <item name="android:background">@color/firebaseUiColorBackground</item>
+        <item name="android:windowBackground">@color/firebaseUiColorBackground</item>
+        <item name="android:colorBackground">@color/firebaseUiColorBackground</item>
+      </style>
+
+      <style name="FirebaseUI.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/firebaseUiColorControl</item>
+      </style>
+
+      <style name="FirebaseUI.Text.Link">
+        <item name="android:textColor">@color/firebaseUiColorSecondary</item>
+      </style>
     </config-file>
   </platform>
 </plugin>

@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
-const PLUGIN_NAME = 'FirebaseUIAuthPlugin';
+const PLUGIN_NAME = 'FirebaseUIAuth';
 
 function FirebaseUIAuth(options) {
 

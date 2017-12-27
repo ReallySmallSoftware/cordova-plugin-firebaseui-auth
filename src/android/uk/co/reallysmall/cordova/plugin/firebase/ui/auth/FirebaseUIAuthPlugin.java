@@ -144,12 +144,19 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
     private AuthUI.SignInIntentBuilder buildCustomInstance() {
         AuthUI.SignInIntentBuilder instance = AuthUI.getInstance().createSignInIntentBuilder();
 
+        Log.d(TAG, "buildCustomInstance");
+
         try {
             if (options.has("logo")) {
-                instance = instance.setLogo(options.getInt("logo"));
+                int id = getIdentifier(options.getString("logo"), "mipmap");
+                instance = instance.setLogo(id);
             }
             if (options.has("theme")) {
-                instance = instance.setTheme(options.getInt("theme"));
+                int id = getIdentifier(options.getString("theme"), "style");
+                instance = instance.setTheme(id);
+            } else {
+                int id = getIdentifier("FirebaseUILogonTheme", "style");
+                instance = instance.setTheme(id);
             }
             if (options.has("tosUrl")) {
                 instance = instance.setTosUrl(options.getString("tosUrl"));
@@ -161,6 +168,12 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         }
 
         return instance;
+    }
+
+    private int getIdentifier(String name, String type) {
+        return cordova.getActivity().getApplicationContext().getResources().getIdentifier(name,
+                type,
+                cordova.getActivity().getApplicationContext().getPackageName());
     }
 
     private boolean signOut(CallbackContext callbackContext) {
