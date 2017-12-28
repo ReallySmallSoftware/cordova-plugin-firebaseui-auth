@@ -32,6 +32,7 @@
     </js-module>
 
     <preference name="REVERSED_CLIENT_ID" default="tbs"/>
+
     <config-file target="config.xml" parent="/*">
       <feature name="FirebaseUIAuth">
         <param name="ios-package" value="FirebaseUIAuthPlugin" onload="true"/>
@@ -41,19 +42,40 @@
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>
-          <key>FacebookAppId</key>
-          <string>$FACEBOOK_APPLICATION_ID</string>
-          <key>FacebookDisplayName</key>
-          <string>$FACEBOOK_DISPLAY_NAME</string>
-          <key>CFBundleURLSchemes></key>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>REVERSED_CLIENT_ID</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>$REVERSED_CLIENT_ID</string>
+            </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string></string>
+          <key>CFBundleURLSchemes</key>
           <array>
-              <string>$REVERSED_CLIENT_ID</string>
               <string>fb$FACEBOOK_APPLICATION_ID</string>
           </array>
         </dict>
       </array>
     </config-file>
 
+    <config-file target="*-Info.plist" parent="FacebookAppID">
+        <string>$FACEBOOK_APPLICATION_ID</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="FacebookDisplayName">
+        <string>$FACEBOOK_DISPLAY_NAME</string>
+    </config-file>
 
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
