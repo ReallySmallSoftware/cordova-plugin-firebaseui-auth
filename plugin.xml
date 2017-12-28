@@ -14,6 +14,9 @@
     <engine name="cordova-plugman" version="&gt;=4.2.0"/>
   </engines>
 
+  <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
+  <preference name="FACEBOOK_DISPLAY_NAME" default="tbr"/>
+
   <dependency id="cordova-plugin-firebase-hooks"/>
   <dependency id="cordova-plugin-android-fragmentactivity"/>
 
@@ -28,15 +31,33 @@
       <clobbers target="FirebaseUIAuth"/>
     </js-module>
 
+    <preference name="REVERSED_CLIENT_ID" default="tbs"/>
     <config-file target="config.xml" parent="/*">
       <feature name="FirebaseUIAuth">
-        <param name="ios-package" value="FirebaseUIAuth" onload="true"/>
+        <param name="ios-package" value="FirebaseUIAuthPlugin" onload="true"/>
       </feature>
     </config-file>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>FacebookAppId</key>
+          <string>$FACEBOOK_APPLICATION_ID</string>
+          <key>FacebookDisplayName</key>
+          <string>$FACEBOOK_DISPLAY_NAME</string>
+          <key>CFBundleURLSchemes></key>
+          <array>
+              <string>$REVERSED_CLIENT_ID</string>
+              <string>fb$FACEBOOK_APPLICATION_ID</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+
+
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
-    <pod id="Firebase"/>
-    <pod id="Firebase/Auth"/>
+    <pod id="FirebaseUI/Auth"/>
     <pod id="FirebaseUI/Google"/>
     <pod id="FirebaseUI/Facebook"/>
   </platform>
@@ -54,7 +75,6 @@
     </config-file>
 
     <preference name="ANDROID_FIREBASE_VERSION" default="11.6.0"/>
-    <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
     <preference name="FACEBOOK_LOGIN_PROTOCOL_SCHEME" default="tbr"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
