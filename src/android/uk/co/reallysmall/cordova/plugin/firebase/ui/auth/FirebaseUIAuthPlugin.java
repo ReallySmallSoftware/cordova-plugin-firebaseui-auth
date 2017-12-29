@@ -213,25 +213,16 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         Log.d(TAG, "raiseEventForUser");
 
-        List<? extends UserInfo> userInfoList = user.getProviderData();
-
-        for (UserInfo userInfo : userInfoList) {
-
-            if (user.getProviderId().equals(userInfo.getProviderId())) {
-
                 try {
-                    resultData.put("token", "token");
-                    resultData.put("name", userInfo.getDisplayName());
-                    resultData.put("email", userInfo.getEmail());
-                    resultData.put("id", userInfo.getUid());
-                    if (userInfo.getPhotoUrl() != null) {
-                        resultData.put("photoUrl", userInfo.getPhotoUrl().toString());
+                    resultData.put("name", user.getDisplayName());
+                    resultData.put("email", user.getEmail());
+                    resultData.put("id", user.getUid());
+                    if (user.getPhotoUrl() != null) {
+                        resultData.put("photoUrl", user.getPhotoUrl().toString());
                     }
                 } catch (JSONException e) {
                     Log.d(TAG, e.getMessage());
                 }
-            }
-        }
 
         raiseEvent(callbackContext, "signinsuccess", resultData);
 
@@ -265,7 +256,9 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         JSONObject event = new JSONObject();
         try {
             event.put("type", type);
-            event.put("data", data);
+            if (data != null) {
+                event.put("data", data);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
