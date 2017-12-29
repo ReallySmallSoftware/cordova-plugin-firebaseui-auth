@@ -77,6 +77,15 @@
         <string>$FACEBOOK_DISPLAY_NAME</string>
     </config-file>
 
+    <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+        <array>
+            <string>fbapi</string>
+            <string>fb-messenger-api</string>
+            <string>fbauth2</string>
+            <string>fbshareextensions</string>
+        </array>
+    </config-file>
+
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
     <pod id="FirebaseUI/Auth"/>
