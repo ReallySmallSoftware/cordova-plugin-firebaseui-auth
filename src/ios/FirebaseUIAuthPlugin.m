@@ -67,6 +67,28 @@
 }
 
 - (void)getToken:(CDVInvokedUrlCommand *)command {
+    
+    @try {
+        FIRUser *user = [[FIRAuth auth] currentUser];
+    
+        if (user != nil) {
+            [user getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable error) {
+                if (error == nil) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:token];
+                
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+            }];
+        } else {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no_user_found"];
+        
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"getToken error %@", [exception reason]);
+        @throw exception;
+    }
 }
 
 - (void)signIn:(CDVInvokedUrlCommand *)command {
@@ -97,8 +119,17 @@ options:(NSDictionary *)options {
 }
 
 - (void)signOut:(CDVInvokedUrlCommand *)command {
-    if ([self.authUI signOutWithError:nil]) {
-        [self raiseEvent:@"signoutsuccess" withData:nil];
+    
+    @try {
+        if ([self.authUI signOutWithError:nil]) {
+            [self raiseEvent:@"signoutsuccess" withData:nil];
+        } else {
+            [self raiseEvent:@"signoutfailure" withData:nil];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"SignOut error %@", [exception reason]);
+        @throw exception;
     }
 }
 
@@ -131,7 +162,7 @@ options:(NSDictionary *)options {
     } else {
         isEmailVerified = @NO;
     }
-    
+
     if ([user photoURL] != nil) {
          result = @{@"email" : [user email],
                     @"emailVerified" : isEmailVerified,
