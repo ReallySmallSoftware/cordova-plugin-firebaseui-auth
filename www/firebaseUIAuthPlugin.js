@@ -7,7 +7,6 @@ function FirebaseUIAuth(options) {
     exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [options]);
 
     this.getToken = function(success, failure) {
-
         if(window.Promise) {
             return new Promise(function (resolve, reject) {
                 exec(resolve, reject, PLUGIN_NAME, 'getToken', []);
@@ -33,6 +32,10 @@ function FirebaseUIAuth(options) {
     }
 }
 
-if (typeof module !== undefined && module.exports) {
-    module.exports = FirebaseUIAuth;
-}
+module.exports = {
+  initialise: function(options) {
+    return new Promise(function(resolve, reject) {
+      resolve(new FirebaseUIAuth(options));
+    });
+  }
+};

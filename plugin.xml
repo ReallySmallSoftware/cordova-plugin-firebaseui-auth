@@ -106,7 +106,6 @@
     </config-file>
 
     <preference name="ANDROID_FIREBASE_VERSION" default="11.6.0"/>
-    <preference name="FACEBOOK_LOGIN_PROTOCOL_SCHEME" default="tbr"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
     <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
@@ -124,7 +123,7 @@
 
     <config-file target="res/values/strings.xml" parent="/*">
       <string name="facebook_application_id">$FACEBOOK_APPLICATION_ID</string>
-      <string name="facebook_login_protocol_scheme">$FACEBOOK_LOGIN_PROTOCOL_SCHEME</string>
+      <string name="facebook_login_protocol_scheme">fb$FACEBOOK_APPLICATION_ID</string>
     </config-file>
 
     <config-file target="res/values/color.xml" parent="/*">
