@@ -216,7 +216,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 try {
                     resultData.put("name", user.getDisplayName());
                     resultData.put("email", user.getEmail());
-                    resultData.put("emailVerified", user.getEmailVerified());
+                    resultData.put("emailVerified", user.isEmailVerified());
                     resultData.put("id", user.getUid());
                     if (user.getPhotoUrl() != null) {
                         resultData.put("photoUrl", user.getPhotoUrl().toString());

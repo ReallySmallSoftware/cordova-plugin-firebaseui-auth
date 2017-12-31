@@ -26,6 +26,7 @@ function FirebaseUIAuth(options, resolve) {
 
   var self = this;
   var uiConfig;
+  var uiElement;
 
   var initialise = function() {
     if (firebase.apps.length === 0) {
@@ -38,7 +39,12 @@ function FirebaseUIAuth(options, resolve) {
     loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', initialise, document.body);
   }, document.body);
 
+  this.uiElement = options.uiElement;
+
   this.signInSuccess = function(user) {
+
+    $(this.uiElement).hide();
+
     if (user) {
       var detail = {
         "detail": {
@@ -56,42 +62,66 @@ function FirebaseUIAuth(options, resolve) {
       var customEvent = new CustomEvent("signinsuccess", detail);
       window.dispatchEvent(customEvent);
     } else {
-      var customEvent = new CustomEvent("signoutsuccess", detail);
+      var customEvent = new CustomEvent("signoutsuccess", {});
       window.dispatchEvent(customEvent);
     }
 
     return false;
   };
 
+  var providers = [];
+
+  $.each(options.providers, function(i, v) {
+    if (v === "GOOGLE") {
+      providers.push(firebase.auth.GoogleAuthProvider.PROVIDER_ID);
+    } else
+    if (v === "FACEBOOK") {
+      providers.push(firebase.auth.FacebookAuthProvider.PROVIDER_ID);
+    } else
+    if (v === "EMAIL") {
+      providers.push(firebase.auth.EmailAuthProvider.PROVIDER_ID);
+    }
+  });
+
   this.uiConfig = {
     callbacks: {
       signInSuccess: $.proxy(this.signInSuccess, this),
       uiShown: function() {}
     },
-    signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.EmailAuthProvider.PROVIDER_ID
-    ],
-    tosUrl: '<your-tos-url>'
+    signInOptions: providers
   };
+
+  if (options.tosUrl !== undefined) {
+    this.uiConfig.tosUrl = options.tosUrl;
+  }
 
   this.getToken = function(success, failure) {
     user.getIdToken().then(success);
   };
 
-  this.signIn = function(silent) {
+  this.signIn = function() {
     var ui = firebaseui.auth.AuthUI.getInstance();
 
     if (ui === null) {
       ui = new firebaseui.auth.AuthUI(firebase.auth());
     }
 
-    ui.start('#firebaseui-auth-container', this.uiConfig);
+    $(this.uiElement).show();
+    $(this.uiElement).css("position", "fixed");
+    $(this.uiElement).css("top", "0");
+    $(this.uiElement).css("padding-top", "80px");
+    $(this.uiElement).css("left", "0");
+    $(this.uiElement).css("right", "0");
+    $(this.uiElement).css("bottom", "0");
+    $(this.uiElement).css("background-color", "white");
+
+    ui.start(this.uiElement, this.uiConfig);
   };
 
   this.signOut = function() {
     firebase.auth().signOut();
+    var customEvent = new CustomEvent("signoutsuccess", {});
+    window.dispatchEvent(customEvent);
   };
 }
 

@@ -10,21 +10,21 @@
     if(![FIRApp defaultApp]) {
         [FIRApp configure];
     }
- 
+
     self.authUI = [FUIAuth defaultAuthUI];
     self.authUI.delegate = self;
 }
 
 - (void)initialise:(CDVInvokedUrlCommand *)command {
-    
+
     NSDictionary *options = [command argumentAtIndex:0 withDefault:@{} andClass:[NSDictionary class]];
 
     @try {
- 
+
         [self createProviderList:options];
-        
+
         NSString *tosUrl = [options valueForKey:@"tosUrl"];
-        
+
         if (tosUrl != nil) {
             NSURL *url = [NSURL URLWithString:tosUrl];
             [self.authUI setTOSURL:url];
@@ -37,51 +37,51 @@
 }
 
 - (void)createProviderList:(NSDictionary *)options {
-    
+
     self.providers = [[NSMutableArray<id<FUIAuthProvider>> alloc] init];
-    
+
     NSArray *providers = [options valueForKey:@"providers"];
-    
+
     if (providers != nil) {
-        
+
         BOOL emailHidden = true;
-        
+
         for (NSString *provider in providers) {
             if ([provider isEqualToString:@"GOOGLE"]) {
                 [self.providers addObject:[[FUIGoogleAuth alloc] init]];
             }
-            
+
             if ([provider isEqualToString:@"FACEBOOK"]) {
                 [self.providers addObject:[[FUIFacebookAuth alloc] init]];
             }
-            
+
             if ([provider isEqualToString:@"EMAIL"]) {
                 emailHidden = false;
             }
         }
-        
+
         [self.authUI setSignInWithEmailHidden:emailHidden];
-        
+
         self.authUI.providers = self.providers;
     }
 }
 
 - (void)getToken:(CDVInvokedUrlCommand *)command {
-    
+
     @try {
         FIRUser *user = [[FIRAuth auth] currentUser];
-    
+
         if (user != nil) {
             [user getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable error) {
                 if (error == nil) {
                     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:token];
-                
+
                     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                 }
             }];
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no_user_found"];
-        
+
             [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
         }
     }
@@ -92,12 +92,12 @@
 }
 
 - (void)signIn:(CDVInvokedUrlCommand *)command {
-    
+
     self.signInCallbackId = command.callbackId;
-    
+
     @try {
         FIRUser *user = [[FIRAuth auth] currentUser];
-    
+
         if (user != nil) {
             [self raiseEventForUser:user];
         } else {
@@ -119,7 +119,7 @@ options:(NSDictionary *)options {
 }
 
 - (void)signOut:(CDVInvokedUrlCommand *)command {
-    
+
     @try {
         if ([self.authUI signOutWithError:nil]) {
             [self raiseEvent:@"signoutsuccess" withData:nil];
@@ -137,26 +137,31 @@ options:(NSDictionary *)options {
     if (error == nil) {
         [self raiseEventForUser:user];
     } else {
-        
+
         NSDictionary *data = nil;
-        
+
         if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
             data = @{
                     @"code" : [error localizedFailureReason],
                     @"message" : [error localizedDescription]
                     };
+        } else {
+          data = @{
+                  @"code" : -1,
+                  @"message" : "@Unknown failure reason"
+                  };
         }
-        
+
         [self raiseEvent:@"signinfailure" withData:data];
     }
 }
 
 - (void)raiseEventForUser:(FIRUser *)user {
-    
+
     NSDictionary *result;
-    
+
     NSNumber *isEmailVerified;
-    
+
     if ([user isEmailVerified]) {
         isEmailVerified = @YES;
     } else {
@@ -177,13 +182,13 @@ options:(NSDictionary *)options {
                    @"id" : [user uid]
                    };
     }
-    
+
     [self raiseEvent:@"signinsuccess" withData:result];
 }
 
 - (void)raiseEvent:(NSString *)type withData:(NSDictionary *)data {
     NSDictionary *result;
-    
+
     if (data != nil) {
         result = @{
                     @"type" : type,
@@ -194,10 +199,10 @@ options:(NSDictionary *)options {
                     @"type" : type
                     };
     }
-    
+
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
     [pluginResult setKeepCallbackAsBool:YES];
-    
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
 }
 

@@ -16,9 +16,9 @@ function FirebaseUIAuth(options) {
         }
     };
 
-    this.signIn = function (silent) {
+    this.signIn = function () {
 
-        return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', [silent === true]);
+        return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', []);
     };
 
     this.signOut = function () {
