@@ -32,6 +32,15 @@ function FirebaseUIAuth(options, resolve) {
     if (firebase.apps.length === 0) {
       firebase.initializeApp(options.browser);
     }
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      self.signInSuccess(user);
+    });
+
+    firebase.auth().signInAnonymously().catch(function(error) {
+      alert(error.code + ":" + error.message);
+    });
+
     resolve(self);
   };
 
@@ -85,7 +94,6 @@ function FirebaseUIAuth(options, resolve) {
 
   this.uiConfig = {
     callbacks: {
-      signInSuccess: $.proxy(this.signInSuccess, this),
       uiShown: function() {}
     },
     signInOptions: providers

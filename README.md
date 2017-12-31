@@ -4,9 +4,6 @@ A FirebaseUI Auth plugin to enable easy authentication using a number of differe
 
 What is FirebaseUI?
 ==
-
-Installation
-==
 From the documentation (https://opensource.google.com/projects/firebaseui):
 
 > A UI library for Firebase, including binding for the realtime database, authentication and storage.
@@ -41,6 +38,7 @@ cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VE
     --variable FACEBOOK_APPLICATION_ID=12345678
     --variable FACEBOOK_DISPLAY_NAME="My application"
     --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
+    --variable COLOR_PRIMARY="#ffffff"usercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
     --variable COLOR_PRIMARY="#ffffff"
     --variable COLOR_DARK_PRIMARY="#555555"
     --variable COLOR_LIGHT_PRIMARY="#aaaaaa"
@@ -103,7 +101,8 @@ Create a new FirebaseAuthUI instance:
       "privacyPolicyUrl" : "http://www.myapp.co.uk/privacy.html",
       "theme" : "themeName",
       "logo" : "logoName",
-      "uiElement" : "#mywebelement"
+      "uiElement" : "#mywebelement",
+      "anonymous" : true|false
     }).then(<do my stuff>);
 ```
 
@@ -117,6 +116,7 @@ Not all of the above options will function on all platforms:
 - theme: a theme identifier for styling - Android only
 - logo: a logo to display - Android only
 - uiElement: a jQuery selector for web login - Web only
+- anonymous : if true log in an an anonymous user upon initialisation 
 
 Methods
 ==

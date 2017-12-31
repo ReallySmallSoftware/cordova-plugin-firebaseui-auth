@@ -57,29 +57,58 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             default:
                 return false;
         }
-
     }
 
-    private boolean initialise(JSONArray args, CallbackContext callbackContext) {
+    private boolean initialise(JSONArray args, final CallbackContext callbackContext) {
 
         Log.d(TAG, "initialise");
 
         options = new JSONObject();
 
+        boolean anonymous = false;
+
         try {
             options = args.getJSONObject(0);
             createProviderList();
+            if (options.has("anonymous") && options.getBoolean("anonymous")) {
+                anonymous = true;
+            }
         } catch (JSONException ex) {
             Log.d(TAG, "initialise: error getting options: " + ex.getMessage());
         }
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
         this.callbackContext = callbackContext;
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         firebaseAuth.addAuthStateListener(this);
+        this.signInAnonymous(firebaseAuth);
 
         return true;
+    }
+
+    private void signInAnonymous(final FirebaseAuth firebaseAuth) {
+        if (firebaseAuth.getCurrentUser() == null) {
+            firebaseAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "signInAnonymously:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        raiseEventForUser(user);
+                    } else {
+                        Log.w(TAG, "signInAnonymously:failure", task.getException());
+                        JSONObject data = new JSONObject();
+                        try {
+                            data.put("code", -1);
+                            data.put("message", "Anonymous sign in failed");
+                        } catch (JSONException e) {
+                        }
+                        raiseEvent(callbackContext, "signinfailure", data);
+                    }
+                }
+            });
+        }
     }
 
     private void createProviderList() throws JSONException {
@@ -123,9 +152,9 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         this.callbackContext = callbackContext;
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        if (user != null) {
+        if (user != null && !user.isAnonymous()) {
             Log.d(TAG, "signIn: already have user");
             raiseEventForUser(user);
         } else {
@@ -183,6 +212,8 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         AuthUI.getInstance().signOut((FragmentActivity) cordova.getActivity());
 
         raiseEvent(callbackContext, "signoutsuccess", null);
+
+        this.signInAnonymous(firebaseAuth);
 
         return true;
     }
