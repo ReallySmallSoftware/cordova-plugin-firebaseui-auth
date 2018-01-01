@@ -9,9 +9,10 @@
   <issue>https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth/issues</issue>
 
   <engines>
-    <engine name="cordova" version="&gt;=6.0.0"/>
-    <engine name="cordova-android" version="&gt;=4.0.0"/>
-    <engine name="cordova-plugman" version="&gt;=4.2.0"/>
+    <engine name="cordova" version=">=6.0.0"/>
+    <engine name="cordova-android" version=">=4.0.0"/>
+    <engine name="cordova-plugman" version=">=4.2.0"/>
+    <engine name="cordova-ios" version=">=4.5.4"/>
   </engines>
 
   <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
@@ -88,9 +89,10 @@
 
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
-    <pod id="FirebaseUI/Auth"/>
-    <pod id="FirebaseUI/Google"/>
-    <pod id="FirebaseUI/Facebook"/>
+
+    <framework src="FirebaseUI/Auth" type="podspec" spec="~> 4.5.0"/>
+    <framework src="FirebaseUI/Google" type="podspec" spec="~> 4.5.0"/>
+    <framework src="FirebaseUI/Facebook" type="podspec" spec="~> 4.5.0"/>
   </platform>
 
   <platform name="android">
