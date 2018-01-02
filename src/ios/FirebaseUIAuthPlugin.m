@@ -13,6 +13,7 @@
 
     self.authUI = [FUIAuth defaultAuthUI];
     self.authUI.delegate = self;
+    self.anonymous = false;
 }
 
 - (void)initialise:(CDVInvokedUrlCommand *)command {
@@ -20,6 +21,7 @@
     NSDictionary *options = [command argumentAtIndex:0 withDefault:@{} andClass:[NSDictionary class]];
 
     @try {
+        self.signInCallbackId = command.callbackId;
 
         [self createProviderList:options];
 
@@ -29,6 +31,22 @@
             NSURL *url = [NSURL URLWithString:tosUrl];
             [self.authUI setTOSURL:url];
         }
+        
+        NSNumber *anonymous = [options valueForKey:@"anonymous"];
+        
+        if ([anonymous isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            self.anonymous = true;
+        }
+        
+        [[FIRAuth auth] addAuthStateDidChangeListener:^(FIRAuth * _Nonnull auth, FIRUser * _Nullable user) {
+            if (user != nil) {
+                [self raiseEventForUser:user];
+            } else {
+                [self raiseEvent:@"signoutsuccess" withData:nil];
+            }
+        }];
+        
+        [self signInAnonymous];
     }
     @catch (NSException *exception) {
         NSLog(@"Initialise error %@", [exception reason]);
@@ -66,6 +84,41 @@
     }
 }
 
+- (void)signInAnonymous {
+    
+    if (!self.anonymous) {
+        return;
+    }
+    
+    FIRUser *user = [[FIRAuth auth] currentUser];
+    
+    if (user == nil) {
+        
+        [[FIRAuth auth] signInAnonymouslyWithCompletion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
+            if (user != nil) {
+                [self raiseEventForUser:user];
+            } else if (error != nil) {
+                NSDictionary *data = nil;
+                
+                if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
+                    data = @{
+                             @"code" : [error localizedFailureReason],
+                             @"message" : [error localizedDescription]
+                             };
+                } else {
+                    
+                    data = @{
+                             @"code" : @-1,
+                             @"message" : @"Unknown failure reason"
+                             };
+                }
+                
+                [self raiseEvent:@"signinfailure" withData:data];
+            }
+        }];
+    }
+}
+
 - (void)getToken:(CDVInvokedUrlCommand *)command {
 
     @try {
@@ -98,7 +151,7 @@
     @try {
         FIRUser *user = [[FIRAuth auth] currentUser];
 
-        if (user != nil) {
+        if (user != nil && ![user isAnonymous]) {
             [self raiseEventForUser:user];
         } else {
             UINavigationController *authViewController = [self.authUI authViewController];
@@ -123,6 +176,7 @@ options:(NSDictionary *)options {
     @try {
         if ([self.authUI signOutWithError:nil]) {
             [self raiseEvent:@"signoutsuccess" withData:nil];
+            [self signInAnonymous];
         } else {
             [self raiseEvent:@"signoutfailure" withData:nil];
         }
@@ -146,9 +200,10 @@ options:(NSDictionary *)options {
                     @"message" : [error localizedDescription]
                     };
         } else {
+            
           data = @{
-                  @"code" : -1,
-                  @"message" : "@Unknown failure reason"
+                  @"code" : @-1,
+                  @"message" : @"Unknown failure reason"
                   };
         }
 
@@ -169,21 +224,29 @@ options:(NSDictionary *)options {
     }
 
     if ([user photoURL] != nil) {
-         result = @{@"email" : [user email],
+         result = @{@"email" : [self emptyIfNull:[user email]],
                     @"emailVerified" : isEmailVerified,
-                    @"name" : [user displayName],
-                    @"id" : [user uid],
+                    @"name" : [self emptyIfNull:[user displayName]],
+                    @"id" : [self emptyIfNull:[user uid]],
                     @"photoUrl" : [[user photoURL] absoluteString]
                     };
     } else {
-        result = @{@"email" : [user email],
+        result = @{@"email" : [self emptyIfNull:[user email]],
                    @"emailVerified" : isEmailVerified,
-                   @"name" : [user displayName],
-                   @"id" : [user uid]
+                   @"name" : [self emptyIfNull:[user displayName]],
+                   @"id" : [self emptyIfNull:[user uid]]
                    };
     }
 
     [self raiseEvent:@"signinsuccess" withData:result];
+}
+
+- (NSString *)emptyIfNull:(NSString *)value {
+    if (value == nil) {
+        return (id)[NSNull null];
+    }
+    
+    return value;
 }
 
 - (void)raiseEvent:(NSString *)type withData:(NSDictionary *)data {
