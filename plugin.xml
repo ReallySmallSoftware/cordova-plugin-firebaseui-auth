@@ -118,6 +118,9 @@
 
     <framework src="com.firebaseui:firebase-ui-auth:3.1.0"/>
     <framework src="com.facebook.android:facebook-android-sdk:4.27.0"/>
+    <framework src="com.google.android.gms:play-services-auth:$ANDROID_FIREBASE_VERSION"/>
+    <framework src="com.google.firebase:firebase-core:$ANDROID_FIREBASE_VERSION"/>
+    <framework src="com.google.firebase:firebase-auth:$ANDROID_FIREBASE_VERSION"/>
 
     <source-file src="src/android/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/FirebaseUIAuthPlugin.java" target-dir="src/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/"/>
 

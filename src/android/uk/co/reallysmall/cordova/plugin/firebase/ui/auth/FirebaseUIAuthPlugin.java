@@ -35,6 +35,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
     private CallbackContext callbackContext;
     private FirebaseAuth firebaseAuth;
     private JSONObject options;
+    private boolean anonymous;
 
     @Override
     protected void pluginInitialize() {
@@ -65,7 +66,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         options = new JSONObject();
 
-        boolean anonymous = false;
+        anonymous = false;
 
         try {
             options = args.getJSONObject(0);
@@ -88,7 +89,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
     }
 
     private void signInAnonymous(final FirebaseAuth firebaseAuth) {
-        if (firebaseAuth.getCurrentUser() == null) {
+        if (firebaseAuth.getCurrentUser() == null && anonymous) {
             firebaseAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
