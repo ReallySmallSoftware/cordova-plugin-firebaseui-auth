@@ -1,25 +1,34 @@
 const PLUGIN_NAME = 'FirebaseUIAuth';
 
-var loadJS = function(url, implementationCode, location) {
-  var scriptTag = document.createElement('script');
-  scriptTag.src = url;
+var loadJS = function(url, loaded, implementationCode, location) {
 
-  scriptTag.onload = implementationCode;
-  scriptTag.onreadystatechange = implementationCode;
+  if (!loaded) {
+    var scriptTag = document.createElement('script');
+    scriptTag.src = url;
 
-  location.appendChild(scriptTag);
+    scriptTag.onload = implementationCode;
+    scriptTag.onreadystatechange = implementationCode;
+
+    location.appendChild(scriptTag);
+  } else {
+    implementationCode();
+  }
 };
 
-var loadCSS = function(url, implementationCode, location) {
-  var linkTag = document.createElement('link');
-  linkTag.href = url;
-  linkTag.type = "text/css";
-  linkTag.rel = "stylesheet";
+var loadCSS = function(url, loaded, implementationCode, location) {
+  if (!loaded) {
+    var linkTag = document.createElement('link');
+    linkTag.href = url;
+    linkTag.type = "text/css";
+    linkTag.rel = "stylesheet";
 
-  linkTag.onload = implementationCode;
-  linkTag.onreadystatechange = implementationCode;
+    linkTag.onload = implementationCode;
+    linkTag.onreadystatechange = implementationCode;
 
-  location.appendChild(linkTag);
+    location.appendChild(linkTag);
+  } else {
+    implementationCode();
+  }
 };
 
 function FirebaseUIAuth(options, resolve) {
@@ -49,10 +58,21 @@ function FirebaseUIAuth(options, resolve) {
     resolve(self);
   };
 
-  loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase.js', function() {
-    loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js', function() {
-      loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', function() {
-        loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', initialise, document.body);
+  var firebaseLoaded = "firebase" in window;
+  var firebaseAuthLoaded = false;
+  var firebaseUILoaded = false;
+  if (firebaseLoaded) {
+    firebaseAuthLoaded = "auth" in firebase;
+
+    if (firebaseAuthLoaded) {
+      firebaseUILoaded = "AuthUI" in firebase.auth;
+    }
+  };
+
+  loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase.js', firebaseLoaded, function() {
+    loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js', firebaseAuthLoaded, function() {
+      loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function() {
+        loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', firebaseUILoaded, initialise, document.body);
       }, document.body)
     }, document.body)
   }, document.body);

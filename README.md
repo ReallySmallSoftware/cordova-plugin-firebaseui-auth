@@ -95,7 +95,7 @@ This guide will assume familiarity with Firebase and FirebaseUI.
 Create a new FirebaseAuthUI instance:
 
 ```
-   firebaseUIAuth = FirebaseUIAuth.initialise({
+   FirebaseUIAuth.initialise({
       "providers": ["GOOGLE", "FACEBOOK", "EMAIL"],
       "tosUrl" : "http://www.myapp.co.uk/terms.html",
       "privacyPolicyUrl" : "http://www.myapp.co.uk/privacy.html",
@@ -103,7 +103,9 @@ Create a new FirebaseAuthUI instance:
       "logo" : "logoName",
       "uiElement" : "#mywebelement",
       "anonymous" : true|false
-    }).then(<do my stuff>);
+    }).then(function(firebaseUIAuth) {
+      myfirebaseUIAuthInstance = firebaseUIAuth;
+    });
 ```
 
 This is initialised as a promise to allow the Browser implementation to dynamically add a reference to the FirestoreUI Javascript SDK.
@@ -116,14 +118,13 @@ Not all of the above options will function on all platforms:
 - theme: a theme identifier for styling - Android only
 - logo: a logo to display - Android only
 - uiElement: a jQuery selector for web login - Web only
-- anonymous : if true log in an an anonymous user upon initialisation 
+- anonymous : if true log in an an anonymous user upon initialisation
 
 Methods
 ==
 
-```
 signIn()
-```
+--
 Call this to start the sign in process based on the above configuration. This can raise the following events:
 
 signinsuccess
@@ -151,9 +152,8 @@ Sign in failed for some reason. The following is returned:
 }
 ```
 
-```
 signOut()
-```
+--
 Sign the current user out of the application. This can raise the following events:
 
 signoutsuccess
@@ -165,9 +165,8 @@ signoutfailure
 Sign out failed for some reason.
 
 
-```
 getToken(success, failure)
-```
+--
 Get an access token. `success` will be invoked with the returned token if it was found.
 
 What platform configuration is carried out?
@@ -230,6 +229,24 @@ The following keys are added:
   <string>fbauth2</string>
   <string>fbshareextensions</string>
 </array>
+```
+
+Browser security
+==
+In order to ensure the browser implementation works, it will be necessary to configure the Content-Security-Policy meta tag with something similar to the following:
+
+```
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' gap://ready file://* *;
+                  style-src 'self' 'unsafe-inline'
+                        https://*.gstatic.com
+                        https://*.googleapis.com
+                        https://*.firebase.com
+                        https://*.firebaseio.com;
+                  script-src 'self' 'unsafe-inline' 'unsafe-eval'
+                        https://*.gstatic.com
+                        https://*.googleapis.com
+                        https://*.firebase.com
+                        https://*.firebaseio.com">
 ```
 
 History
