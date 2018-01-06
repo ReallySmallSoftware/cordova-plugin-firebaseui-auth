@@ -190,14 +190,23 @@ options:(NSDictionary *)options {
 - (void)deleteUser:(CDVInvokedUrlCommand *)command {
 
     @try {
-      [[FIRAuth auth] delete:^(FIRUser * _Nullable user, NSError * _Nullable error) 
-
-        if ([self.authUI delete:nil]) {
-            [self raiseEvent:@"deleteusersuccess" withData:nil];
-            [self signInAnonymous];
-        } else {
-            [self raiseEvent:@"deleteuserfailure" withData:nil];
-        }
+        
+        FIRUser *user = [[FIRAuth auth] currentUser];
+        
+        [user deleteWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+                
+                NSDictionary *data = @{
+                                        @"code" : @1,
+                                        @"message" : @"This operation requires recent authentication. Please log out and back in and try again."
+                                    };
+                
+                [self raiseEvent:@"deleteuserfailure" withData:data];
+            } else {
+                [self raiseEvent:@"deleteusersuccess" withData:nil];
+                [self signInAnonymous];
+            }
+        }];
     }
     @catch (NSException *exception) {
         NSLog(@"SignOut error %@", [exception reason]);
@@ -220,7 +229,7 @@ options:(NSDictionary *)options {
         } else {
 
           data = @{
-                  @"code" : @-1,
+                  @"code" : @1,
                   @"message" : @"Unknown failure reason"
                   };
         }
