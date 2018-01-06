@@ -80,13 +80,31 @@ Not all variables are relevant to all providers:
 - COLOR_CONTROL: Used to style the UI - only used by Android
 - COLOR_BACKGROUND: Used to style the UI - only used by Android
 
+Firebase configuration
+--
+Android
+--
+You must ensure that `google-services.json` is put in the correct location. This can be achieved using the following in your `config.xml`:
+
+```
+<platform name="android">
+    <resource-file src="google-services.json" target="google-services.json" />
+</platform>
+```
+iOS
+--
+iOS requires `GoogleService-Info.plist` is put in the correct location. Similarly this can be done as follws:
+```
+<platform name="ios">
+    <resource-file src="GoogleService-Info.plist" />
+</platform>
+```
+
 Dependencies
 ==
 In order for FirebaseUI to work on Android the default Cordova MainActivity needs to be replaced with a class that inherits from a FragmentActivity.
 
 This plugin therefore depends on the `cordova-plugin-android-fragmentactivity` plugin to enable this.
-
-It also depends on `cordova-plugin-firebase-hooks` to enable the necessary config files to be copied to the correct platform locations.
 
 Getting started
 ==

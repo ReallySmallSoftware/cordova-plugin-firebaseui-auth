@@ -18,7 +18,6 @@
   <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
   <preference name="FACEBOOK_DISPLAY_NAME" default="tbr"/>
 
-  <dependency id="cordova-plugin-firebase-hooks"/>
   <dependency id="cordova-plugin-android-fragmentactivity"/>
 
   <platform name="browser">
