@@ -106,7 +106,7 @@
       </feature>
     </config-file>
 
-    <preference name="ANDROID_FIREBASE_VERSION" default="11.6.0"/>
+    <preference name="ANDROID_FIREBASE_VERSION" default="11.8.0"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
     <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
@@ -115,7 +115,7 @@
     <preference name="COLOR_CONTROL" default="#ffffff"/>
     <preference name="COLOR_BACKGROUND" default="#000000"/>
 
-    <framework src="com.firebaseui:firebase-ui-auth:3.1.0"/>
+    <framework src="com.firebaseui:firebase-ui-auth:3.1.3"/>
     <framework src="com.facebook.android:facebook-android-sdk:4.27.0"/>
     <framework src="com.google.android.gms:play-services-auth:$ANDROID_FIREBASE_VERSION"/>
     <framework src="com.google.firebase:firebase-core:$ANDROID_FIREBASE_VERSION"/>

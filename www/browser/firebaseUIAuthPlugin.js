@@ -148,9 +148,9 @@ function FirebaseUIAuth(options, resolve) {
     window.dispatchEvent(customEvent);
   };
 
-  this.getToken = function(success, failure) {
+  this.getToken = function() {
     var currentUser = firebase.auth().currentUser;
-    currentUser.getIdToken().then(success);
+    return currentUser.getIdToken();
   };
 
   this.signIn = function() {

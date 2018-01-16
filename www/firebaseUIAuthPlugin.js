@@ -3,33 +3,28 @@ const PLUGIN_NAME = 'FirebaseUIAuth';
 
 function FirebaseUIAuth(options) {
 
-    options = options || {};
-    exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [options]);
+  options = options || {};
+  exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [options]);
 
-    this.getToken = function(success, failure) {
-        if(window.Promise) {
-            return new Promise(function (resolve, reject) {
-                exec(resolve, reject, PLUGIN_NAME, 'getToken', []);
-            });
-        } else {
-            return exec(success, failure, PLUGIN_NAME, 'getToken', []);
-        }
-    };
+  this.getToken = function() {
+    return new Promise(function(resolve, reject) {
+      exec(resolve, reject, PLUGIN_NAME, 'getToken', []);
+    });
+  };
 
-    this.signIn = function () {
+  this.signIn = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', []);
+  };
 
-        return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', []);
-    };
+  this.signOut = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'signOut', []);
+  };
 
-    this.signOut = function () {
-
-        return exec(dispatchEvent, null, PLUGIN_NAME, 'signOut', []);
-    };
-
-    function dispatchEvent(event) {
-
-        window.dispatchEvent(new CustomEvent(event.type, {detail: event.data}));
-    }
+  function dispatchEvent(event) {
+    window.dispatchEvent(new CustomEvent(event.type, {
+      detail: event.data
+    }));
+  }
 }
 
 module.exports = {

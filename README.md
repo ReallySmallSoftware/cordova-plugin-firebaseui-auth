@@ -183,9 +183,9 @@ signoutfailure
 Sign out failed for some reason.
 
 
-getToken(success, failure)
+getToken()
 --
-Get an access token. `success` will be invoked with the returned token if it was found.
+Get an access token, returning a Promise.
 
 What platform configuration is carried out?
 ==

@@ -7,12 +7,12 @@ import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
-import com.google.firebase.auth.UserInfo;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -211,7 +211,6 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         Log.d(TAG, "signOut");
 
         AuthUI.getInstance().signOut((FragmentActivity) cordova.getActivity());
-
         raiseEvent(callbackContext, "signoutsuccess", null);
 
         this.signInAnonymous(firebaseAuth);
@@ -245,17 +244,17 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         Log.d(TAG, "raiseEventForUser");
 
-                try {
-                    resultData.put("name", user.getDisplayName());
-                    resultData.put("email", user.getEmail());
-                    resultData.put("emailVerified", user.isEmailVerified());
-                    resultData.put("id", user.getUid());
-                    if (user.getPhotoUrl() != null) {
-                        resultData.put("photoUrl", user.getPhotoUrl().toString());
-                    }
-                } catch (JSONException e) {
-                    Log.d(TAG, e.getMessage());
-                }
+        try {
+            resultData.put("name", user.getDisplayName());
+            resultData.put("email", user.getEmail());
+            resultData.put("emailVerified", user.isEmailVerified());
+            resultData.put("id", user.getUid());
+            if (user.getPhotoUrl() != null) {
+                resultData.put("photoUrl", user.getPhotoUrl().toString());
+            }
+        } catch (JSONException e) {
+            Log.d(TAG, e.getMessage());
+        }
 
         raiseEvent(callbackContext, "signinsuccess", resultData);
 
