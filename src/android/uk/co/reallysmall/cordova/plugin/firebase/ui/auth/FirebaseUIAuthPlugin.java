@@ -53,6 +53,8 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 return signIn(callbackContext);
             case "signOut":
                 return signOut(callbackContext);
+            case "deleteUser":
+                return deleteUser(callbackContext);
             case "getToken":
                 return getToken(callbackContext);
             default:
@@ -99,18 +101,13 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                         raiseEventForUser(user);
                     } else {
                         Log.w(TAG, "signInAnonymously:failure", task.getException());
-                        JSONObject data = new JSONObject();
-                        try {
-                            data.put("code", -1);
-                            data.put("message", "Anonymous sign in failed");
-                        } catch (JSONException e) {
-                        }
-                        raiseEvent(callbackContext, "signinfailure", data);
+                        raiseErrorEvent("signinfailure", 1, "Anonymous sign in failed");
                     }
                 }
             });
         }
     }
+
 
     private void createProviderList() throws JSONException {
 
@@ -218,6 +215,41 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         return true;
     }
 
+    private boolean deleteUser(final CallbackContext callbackContext) {
+
+        Log.d(TAG, "deleteUser");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        final FirebaseUIAuthPlugin plugin = this;
+
+        if (user != null) {
+            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+
+                        Log.d(TAG, "deleteUser: success");
+
+                        AuthUI.getInstance().delete((FragmentActivity) cordova.getActivity());
+                        raiseEvent(callbackContext, "deleteusersuccess", null);
+
+                        plugin.signInAnonymous(firebaseAuth);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "deleteUser: failure", e);
+                    raiseErrorEvent("deleteuserfailure", 1, "This operation requires you to have recently authenticated. Please log out and back in and try again.");
+                }
+            });
+        }
+
+        return true;
+    }
+
+
     private boolean getToken(final CallbackContext callbackContext) {
 
         Log.d(TAG, "getToken");
@@ -237,6 +269,16 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         }
 
         return true;
+    }
+
+    private void raiseErrorEvent(String event, int code, String message) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("code", code);
+            data.put("message", message);
+        } catch (JSONException e) {
+        }
+        raiseEvent(callbackContext, event, data);
     }
 
     private void raiseEventForUser(FirebaseUser user) {

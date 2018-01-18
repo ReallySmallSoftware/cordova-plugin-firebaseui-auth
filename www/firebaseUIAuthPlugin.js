@@ -20,17 +20,13 @@ function FirebaseUIAuth(options) {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'signOut', []);
   };
 
+  this.delete = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'deleteUser', []);
+  };
+
   function dispatchEvent(event) {
     window.dispatchEvent(new CustomEvent(event.type, {
       detail: event.data
     }));
   }
 }
-
-module.exports = {
-  initialise: function(options) {
-    return new Promise(function(resolve, reject) {
-      resolve(new FirebaseUIAuth(options));
-    });
-  }
-};

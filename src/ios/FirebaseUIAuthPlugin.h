@@ -9,6 +9,7 @@
 - (void)signIn:(CDVInvokedUrlCommand *)command;
 - (void)signOut:(CDVInvokedUrlCommand *)command;
 - (void)getToken:(CDVInvokedUrlCommand *)command;
+- (void)deleteUser:(CDVInvokedUrlCommand *)command;
 
 @property(strong,nonatomic) FUIAuth *authUI;
 @property(strong,nonatomic) NSMutableArray<id<FUIAuthProvider>> *providers;

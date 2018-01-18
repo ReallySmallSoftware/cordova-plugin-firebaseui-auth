@@ -31,13 +31,13 @@
             NSURL *url = [NSURL URLWithString:tosUrl];
             [self.authUI setTOSURL:url];
         }
-        
+
         NSNumber *anonymous = [options valueForKey:@"anonymous"];
-        
+
         if ([anonymous isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             self.anonymous = true;
         }
-        
+
         [[FIRAuth auth] addAuthStateDidChangeListener:^(FIRAuth * _Nonnull auth, FIRUser * _Nullable user) {
             if (user != nil) {
                 [self raiseEventForUser:user];
@@ -45,7 +45,7 @@
                 [self raiseEvent:@"signoutsuccess" withData:nil];
             }
         }];
-        
+
         [self signInAnonymous];
     }
     @catch (NSException *exception) {
@@ -85,34 +85,34 @@
 }
 
 - (void)signInAnonymous {
-    
+
     if (!self.anonymous) {
         return;
     }
-    
+
     FIRUser *user = [[FIRAuth auth] currentUser];
-    
+
     if (user == nil) {
-        
+
         [[FIRAuth auth] signInAnonymouslyWithCompletion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
             if (user != nil) {
                 [self raiseEventForUser:user];
             } else if (error != nil) {
                 NSDictionary *data = nil;
-                
+
                 if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
                     data = @{
                              @"code" : [error localizedFailureReason],
                              @"message" : [error localizedDescription]
                              };
                 } else {
-                    
+
                     data = @{
                              @"code" : @-1,
                              @"message" : @"Unknown failure reason"
                              };
                 }
-                
+
                 [self raiseEvent:@"signinfailure" withData:data];
             }
         }];
@@ -187,6 +187,24 @@ options:(NSDictionary *)options {
     }
 }
 
+- (void)deleteUser:(CDVInvokedUrlCommand *)command {
+
+    @try {
+      [[FIRAuth auth] delete:^(FIRUser * _Nullable user, NSError * _Nullable error) 
+
+        if ([self.authUI delete:nil]) {
+            [self raiseEvent:@"deleteusersuccess" withData:nil];
+            [self signInAnonymous];
+        } else {
+            [self raiseEvent:@"deleteuserfailure" withData:nil];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"SignOut error %@", [exception reason]);
+        @throw exception;
+    }
+}
+
 - (void)authUI:(nonnull FUIAuth *)authUI didSignInWithUser:(nullable FIRUser *)user error:(nullable NSError *)error {
     if (error == nil) {
         [self raiseEventForUser:user];
@@ -200,7 +218,7 @@ options:(NSDictionary *)options {
                     @"message" : [error localizedDescription]
                     };
         } else {
-            
+
           data = @{
                   @"code" : @-1,
                   @"message" : @"Unknown failure reason"
@@ -245,7 +263,7 @@ options:(NSDictionary *)options {
     if (value == nil) {
         return (id)[NSNull null];
     }
-    
+
     return value;
 }
 

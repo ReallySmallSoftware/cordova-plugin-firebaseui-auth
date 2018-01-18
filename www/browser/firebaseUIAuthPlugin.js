@@ -188,12 +188,32 @@ function FirebaseUIAuth(options, resolve) {
     window.dispatchEvent(customEvent);
     this.signInAnonymously();
   };
-}
 
-module.exports = {
-  initialise: function(options) {
-    return new Promise(function(resolve, reject) {
-      var db = new FirebaseUIAuth(options, resolve);
+  this.delete = function() {
+    var ui = firebaseui.auth.AuthUI.getInstance();
+
+    if (ui === null) {
+      ui = new firebaseui.auth.AuthUI(firebase.auth());
+    }
+
+    var currentUser = firebase.auth().currentUser;
+
+    var self = this;
+
+    currentUser.delete().then(function() {
+      ui.delete();
+
+      var customEvent = new CustomEvent("deleteusersuccess", {});
+      window.dispatchEvent(customEvent);
+      self.signInAnonymously();
+
+    }).catch(function(err) {
+      var customEvent = new CustomEvent("deleteuserfailure", {
+        detail: {
+          message: err.message
+        }
+      });
+      window.dispatchEvent(customEvent);
     });
-  }
-};
+  };
+}
