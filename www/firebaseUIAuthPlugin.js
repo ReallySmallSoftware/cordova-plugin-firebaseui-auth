@@ -30,3 +30,11 @@ function FirebaseUIAuth(options) {
     }));
   }
 }
+
+module.exports = {
+  initialise: function(options) {
+    return new Promise(function(resolve, reject) {
+      resolve(new FirebaseUIAuth(options));
+    });
+  }
+};
