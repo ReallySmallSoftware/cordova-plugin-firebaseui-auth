@@ -217,3 +217,11 @@ function FirebaseUIAuth(options, resolve) {
     });
   };
 }
+
+module.exports = {
+  initialise: function(options) {
+    return new Promise(function(resolve, reject) {
+      var db = new FirebaseUIAuth(options, resolve);
+    });
+  }
+};
