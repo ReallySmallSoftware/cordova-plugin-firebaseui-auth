@@ -120,7 +120,9 @@ Create a new FirebaseAuthUI instance:
       "theme" : "themeName",
       "logo" : "logoName",
       "uiElement" : "#mywebelement",
-      "anonymous" : true|false
+      "anonymous" : true|false,
+      "smartLockEnabled" : true|false,
+      "smartLockHints" : true|false
     }).then(function(firebaseUIAuth) {
       myfirebaseUIAuthInstance = firebaseUIAuth;
     });
@@ -136,7 +138,9 @@ Not all of the above options will function on all platforms:
 - theme: a theme identifier for styling - Android only
 - logo: a logo to display - Android only
 - uiElement: a jQuery selector for web login - Web only
-- anonymous : if true log in an an anonymous user upon initialisation
+- anonymous : if true log in an an anonymous user upon initialisation (default false)
+- smartLockEnabled : enable SmartLock to store credentials - Android only (default true)
+- smartLockHints : enable SmartLock hints - Android only (default false)
 
 Methods
 ==

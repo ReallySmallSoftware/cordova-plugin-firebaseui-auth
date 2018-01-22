@@ -173,6 +173,9 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         Log.d(TAG, "buildCustomInstance");
 
+        boolean smartLockEnabled = false;
+        boolean smartLockHints = false;
+
         try {
             if (options.has("logo")) {
                 int id = getIdentifier(options.getString("logo"), "mipmap");
@@ -191,6 +194,13 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             if (options.has("privacyPolicyUrl")) {
                 instance = instance.setPrivacyPolicyUrl(options.getString("privacyPolicyUrl"));
             }
+            if (options.has("smartLockEnabled")) {
+                smartLockEnabled = options.getBoolean("smartLockEnabled");
+            }
+            if (options.has("smartLockHints")) {
+                smartLockHints = options.getBoolean("smartLockHints");
+            }
+            instance = instance.setIsSmartLockEnabled(smartLockEnabled, smartLockHints);
         } catch (JSONException ex) {
         }
 
