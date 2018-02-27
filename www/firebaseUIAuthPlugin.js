@@ -1,7 +1,15 @@
+/*global dispatchEvent: false, Promise: false, CustomEvent: false */
+/*jshint esversion: 6 */
 var exec = require('cordova/exec');
 const PLUGIN_NAME = 'FirebaseUIAuth';
 
 function FirebaseUIAuth(options) {
+
+  function dispatchEvent(event) {
+    window.dispatchEvent(new CustomEvent(event.type, {
+      detail: event.data
+    }));
+  }
 
   options = options || {};
   exec(dispatchEvent, null, PLUGIN_NAME, 'initialise', [options]);
@@ -24,11 +32,6 @@ function FirebaseUIAuth(options) {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'deleteUser', []);
   };
 
-  function dispatchEvent(event) {
-    window.dispatchEvent(new CustomEvent(event.type, {
-      detail: event.data
-    }));
-  }
 }
 
 module.exports = {

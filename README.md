@@ -106,6 +106,14 @@ In order for FirebaseUI to work on Android the default Cordova MainActivity need
 
 This plugin therefore depends on the `cordova-plugin-android-fragmentactivity` plugin to enable this.
 
+Promise
+--
+This plugin uses Promises. If you want to use this with Android 4.4 then you will need to include a Promise polyfill.
+
+Java 7
+--
+The Android code expects Java 7 support. This plugin may help: https://github.com/cvuser0/cordova-plugin-java7
+
 Getting started
 ==
 This guide will assume familiarity with Firebase and FirebaseUI.
@@ -119,7 +127,7 @@ Create a new FirebaseAuthUI instance:
       "privacyPolicyUrl" : "http://www.myapp.co.uk/privacy.html",
       "theme" : "themeName",
       "logo" : "logoName",
-      "uiElement" : "#mywebelement",
+      "uiElement" : "mywebelement",
       "anonymous" : true|false,
       "smartLockEnabled" : true|false,
       "smartLockHints" : true|false
@@ -141,6 +149,31 @@ Not all of the above options will function on all platforms:
 - anonymous : if true log in an an anonymous user upon initialisation (default false)
 - smartLockEnabled : enable SmartLock to store credentials - Android only (default true)
 - smartLockHints : enable SmartLock hints - Android only (default false)
+
+Browser configuration
+--
+In order for the above initialisation to work on a browser you need to include some extra configuration in the form of the `browser` section show below:
+
+```
+FirebaseUIAuth.initialise({
+   "providers": ["GOOGLE", "FACEBOOK", "EMAIL"],
+   "tosUrl" : "http://www.myapp.co.uk/terms.html",
+   "privacyPolicyUrl" : "http://www.myapp.co.uk/privacy.html",
+   "theme" : "themeName",
+   "logo" : "logoName",
+   "uiElement" : "mywebelement",
+   "anonymous" : true|false,
+   "smartLockEnabled" : true|false,
+   "smartLockHints" : true|false,
+   "browser" : {
+     apiKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+     authDomain: 'xxxxxxxxxxxxxx.firebaseapp.com',
+     projectId: 'xxxxxxxxxxxxx',
+   }
+ }).then(function(firebaseUIAuth) {
+   myfirebaseUIAuthInstance = firebaseUIAuth;
+ });
+```
 
 Methods
 ==
@@ -267,12 +300,19 @@ In order to ensure the browser implementation works, it will be necessary to con
                   script-src 'self' 'unsafe-inline' 'unsafe-eval'
                         https://*.gstatic.com
                         https://*.googleapis.com
+                        https://*.google.com
                         https://*.firebase.com
                         https://*.firebaseio.com">
 ```
 
 History
 ==
+0.0.2
+--
+- Update README
+- Add grunt to run jshint
+- Fix some grunt warnings
+
 0.0.1
 --
 - Initial release

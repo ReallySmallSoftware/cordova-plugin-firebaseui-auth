@@ -1,3 +1,5 @@
+/*global firebase, alert:false, firebaseui: false, Promise: false, CustomEvent: false */
+/*jshint esversion: 6 */
 const PLUGIN_NAME = 'FirebaseUIAuth';
 
 var loadJS = function(url, loaded, implementationCode, location) {
@@ -67,19 +69,20 @@ function FirebaseUIAuth(options, resolve) {
     if (firebaseAuthLoaded) {
       firebaseUILoaded = "AuthUI" in firebase.auth;
     }
-  };
+  }
 
   loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase.js', firebaseLoaded, function() {
     loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js', firebaseAuthLoaded, function() {
       loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function() {
         loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', firebaseUILoaded, initialise, document.body);
-      }, document.body)
-    }, document.body)
+      }, document.body);
+    }, document.body);
   }, document.body);
 
   this.buildProviders = function(optionProviders) {
 
     var providers = [];
+    var i;
 
     for (i = 0; i < optionProviders.length; i++) {
       if (optionProviders[i] === "GOOGLE") {
