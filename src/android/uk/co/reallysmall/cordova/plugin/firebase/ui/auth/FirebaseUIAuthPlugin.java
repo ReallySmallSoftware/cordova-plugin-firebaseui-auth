@@ -46,19 +46,18 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         Log.d(TAG, "action : " + action);
 
-        switch (action) {
-            case "initialise":
-                return initialise(args, callbackContext);
-            case "signIn":
-                return signIn(callbackContext);
-            case "signOut":
-                return signOut(callbackContext);
-            case "deleteUser":
-                return deleteUser(callbackContext);
-            case "getToken":
-                return getToken(callbackContext);
-            default:
-                return false;
+        if ("initialise".equals(action)) {
+          return initialise(args, callbackContext);
+        } else if ("signIn".equals(action)) {
+          return signIn(callbackContext);
+        } else if ("signOut".equals(action)) {
+          return signOut(callbackContext);
+        } else if ("deleteUser".equals(action)) {
+          return deleteUser(callbackContext);
+        } else if ("getToken".equals(action)) {
+          return getToken(callbackContext);
+        } else {
+          return false;
         }
     }
 
@@ -107,7 +106,6 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             });
         }
     }
-
 
     private void createProviderList() throws JSONException {
 

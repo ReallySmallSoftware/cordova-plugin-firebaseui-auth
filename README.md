@@ -110,10 +110,6 @@ Promise
 --
 This plugin uses Promises. If you want to use this with Android 4.4 then you will need to include a Promise polyfill.
 
-Java 7
---
-The Android code expects Java 7 support. This plugin may help: https://github.com/cvuser0/cordova-plugin-java7
-
 Getting started
 ==
 This guide will assume familiarity with Firebase and FirebaseUI.
@@ -307,6 +303,10 @@ In order to ensure the browser implementation works, it will be necessary to con
 
 History
 ==
+0.0.3
+--
+- Remove Java 7 dependency
+
 0.0.2
 --
 - Update README
