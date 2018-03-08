@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="0.0.3">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="0.0.4">
   <name>Firebase UI Authentication</name>
   <description>Adds support for Firebase Authentication to your Cordova/PhoneGap apps.</description>
   <license>Apache 2.0</license>
@@ -89,9 +89,11 @@
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
 
-    <framework src="FirebaseUI/Auth" type="podspec" spec="~> 4.5.0"/>
-    <framework src="FirebaseUI/Google" type="podspec" spec="~> 4.5.0"/>
-    <framework src="FirebaseUI/Facebook" type="podspec" spec="~> 4.5.0"/>
+    <preference name="IOS_FIREBASE_VERSION" default="4.5.2"/>
+
+    <framework src="FirebaseUI/Auth" type="podspec" spec="~> $IOS_FIREBASE_VERSION"/>
+    <framework src="FirebaseUI/Google" type="podspec" spec="~> $IOS_FIREBASE_VERSION"/>
+    <framework src="FirebaseUI/Facebook" type="podspec" spec="~> $IOS_FIREBASE_VERSION"/>
   </platform>
 
   <platform name="android">
@@ -107,6 +109,8 @@
     </config-file>
 
     <preference name="ANDROID_FIREBASE_VERSION" default="11.8.0"/>
+    <preference name="ANDROID_FIREBASEUI_VERSION" default="3.2.2"/>
+    <preference name="ANDROID_FACEBOOK_SDK_VERSION" default="4.31.0"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
     <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
@@ -115,8 +119,8 @@
     <preference name="COLOR_CONTROL" default="#ffffff"/>
     <preference name="COLOR_BACKGROUND" default="#000000"/>
 
-    <framework src="com.firebaseui:firebase-ui-auth:3.1.3"/>
-    <framework src="com.facebook.android:facebook-android-sdk:4.27.0"/>
+    <framework src="com.firebaseui:firebase-ui-auth:$ANDROID_FIREBASEUI_VERSION"/>
+    <framework src="com.facebook.android:facebook-android-sdk:$ANDROID_FACEBOOK_SDK_VERSION"/>
     <framework src="com.google.android.gms:play-services-auth:$ANDROID_FIREBASE_VERSION"/>
     <framework src="com.google.firebase:firebase-core:$ANDROID_FIREBASE_VERSION"/>
     <framework src="com.google.firebase:firebase-auth:$ANDROID_FIREBASE_VERSION"/>

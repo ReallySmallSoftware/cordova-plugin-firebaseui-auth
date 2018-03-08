@@ -4,33 +4,40 @@
 
 const fs = require('fs');
 const _ = require('lodash');
+const utilities = require("../lib/utilities");
 
 module.exports = function(context) {
-  const stylesPath = context.opts.projectRoot + '/platforms/android/res/values/styles.xml';
-  const colorPath = context.opts.projectRoot + '/platforms/android/res/values/color.xml';
 
-  function fileExistsWithContent(filename) {
-    if (!fs.existsSync(filename)) {
-      console.log(filename + " does not exist.");
-      return false;
+  var androidResPath = utilities.getAndroidResPath(context);
+
+  if (androidResPath !== null) {
+
+    const stylesPath = androidResPath + '/res/values/styles.xml';
+    const colorPath = androidResPath + '/res/values/color.xml';
+
+    function fileExistsWithContent(filename) {
+      if (!fs.existsSync(filename)) {
+        console.log(filename + " does not exist.");
+        return false;
+      }
+      const stats = fs.statSync(filename);
+      const fileSizeInBytes = stats.size;
+
+      if (fileSizeInBytes == 0) {
+        console.log(filename + " is empty.");
+      }
+
+      return true;
     }
-    const stats = fs.statSync(filename);
-    const fileSizeInBytes = stats.size;
 
-    if (fileSizeInBytes == 0) {
-      console.log(filename + " is empty.");
+    if (!fileExistsWithContent(stylesPath)) {
+      fs.writeFileSync(stylesPath, "<resources></resources>");
+      console.log("Added styles definition.");
     }
 
-    return true;
-  }
-
-  if (!fileExistsWithContent(stylesPath)) {
-    fs.writeFileSync(stylesPath, "<resources></resources>");
-    console.log("Added styles definition.");
-  }
-
-  if (!fileExistsWithContent(colorPath)) {
-    fs.writeFileSync(colorPath, "<resources></resources>");
-    console.log("Added colours.");
+    if (!fileExistsWithContent(colorPath)) {
+      fs.writeFileSync(colorPath, "<resources></resources>");
+      console.log("Added colours.");
+    }
   }
 };

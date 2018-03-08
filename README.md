@@ -34,7 +34,10 @@ Installation
 ==
 
 ```
-cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VERSION=11.6.0
+cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VERSION=11.8.0
+    --variable ANDROID_FIREBASEUI_VERSION=3.2.2
+    --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
+    --variable IOS_FIREBASE_VERSION=4.5.1
     --variable FACEBOOK_APPLICATION_ID=12345678
     --variable FACEBOOK_DISPLAY_NAME="My application"
     --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
@@ -51,7 +54,10 @@ cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VE
 or
 
 ```
-phonegap plugin add cordova-plugin-firebaseui-auth  --variable ANDROID_FIREBASE_VERSION=11.6.0
+phonegap plugin add cordova-plugin-firebaseui-auth  --variable ANDROID_FIREBASE_VERSION=11.8.0
+    --variable ANDROID_FIREBASEUI_VERSION=3.2.2
+    --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
+    --variable IOS_FIREBASE_VERSION=4.5.1
     --variable FACEBOOK_APPLICATION_ID=12345678
     --variable FACEBOOK_DISPLAY_NAME="My application"
     --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
@@ -69,6 +75,9 @@ Any variables that are not supplied will use default values. For credential base
 Not all variables are relevant to all providers:
 
 - ANDROID_FIREBASE_VERSION: the version of Firebase to use. This changes regularly and mismatching the version used by different plugins can cause build issues, so be aware
+- ANDROID_FIREBASEUI_VERSION: the version of Firebase UI to use
+- ANDROID_FACEBOOK_SDK_VERSION: the version of the Facebook SDK to use
+- IOS_FIREBASE_VERSION: the Pod version of Firebase
 - FACEBOOK_APPLICATION_ID: Facebook only - the application id if your application
 - FACEBOOK_DISPLAY_NAME: Facebook only - the display name of your application - only used by iOS
 - REVERSED_CLIENT_ID: Google only - the reversed client Id which can be found in your GoogleService-Info.plist file - only used by iOS
@@ -303,6 +312,11 @@ In order to ensure the browser implementation works, it will be necessary to con
 
 History
 ==
+0.0.4
+--
+- Experimental support for cordova-android 7
+- Increased dependency versions
+
 0.0.3
 --
 - Remove Java 7 dependency
