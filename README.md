@@ -1,23 +1,19 @@
-cordova-plugin-firebaseui-auth
-==
+# cordova-plugin-firebaseui-auth
 A FirebaseUI Auth plugin to enable easy authentication using a number of different providers.
 
-What is FirebaseUI?
-==
+# What is FirebaseUI?
 From the documentation (https://opensource.google.com/projects/firebaseui):
 
 > A UI library for Firebase, including binding for the realtime database, authentication and storage.
 
-Supported platforms
-==
+# Supported platforms
 This plugin supports the following platforms:
 
 - Android
 - iOS
 - Browser
 
-Support providers
-==
+# Support providers
 The following providers are currently supported:
 
 - Google
@@ -30,8 +26,7 @@ Follow the instructions for each of the platforms and providers you wish you use
 - https://firebase.google.com/docs/ios/setup?authuser=0#manually_add_firebase
 - https://developers.facebook.com/
 
-Installation
-==
+# Installation
 
 ```
 cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VERSION=11.8.0
@@ -86,10 +81,8 @@ Not all variables are relevant to all providers:
 - COLOR_CONTROL: Used to style the UI - only used by Android
 - COLOR_BACKGROUND: Used to style the UI - only used by Android
 
-Firebase configuration
---
-Android
---
+## Firebase configuration
+### Android
 You must ensure that `google-services.json` is put in the correct location. This can be achieved using the following in your `config.xml`:
 
 ```
@@ -97,8 +90,13 @@ You must ensure that `google-services.json` is put in the correct location. This
     <resource-file src="google-services.json" target="google-services.json" />
 </platform>
 ```
-iOS
---
+
+#### MainActivity
+In order for FirebaseUI to work on Android the default Cordova MainActivity needs to be replaced with a class that inherits from a FragmentActivity.
+
+This plugin therefore depends on the `cordova-plugin-android-fragmentactivity` plugin to enable this.
+
+### iOS
 iOS requires `GoogleService-Info.plist` is put in the correct location. Similarly this can be done as follws:
 ```
 <platform name="ios">
@@ -106,18 +104,14 @@ iOS requires `GoogleService-Info.plist` is put in the correct location. Similarl
 </platform>
 ```
 
-Dependencies
-==
-In order for FirebaseUI to work on Android the default Cordova MainActivity needs to be replaced with a class that inherits from a FragmentActivity.
+#### Keychain Sharing Capability
+If using multiple Firebase plugins it may be necessary to enable this.
 
-This plugin therefore depends on the `cordova-plugin-android-fragmentactivity` plugin to enable this.
-
-Promise
---
+## Dependencies
+### Promises
 This plugin uses Promises. If you want to use this with Android 4.4 then you will need to include a Promise polyfill.
 
-Getting started
-==
+# Getting started
 This guide will assume familiarity with Firebase and FirebaseUI.
 
 Create a new FirebaseAuthUI instance:
@@ -138,7 +132,7 @@ Create a new FirebaseAuthUI instance:
     });
 ```
 
-This is initialised as a promise to allow the Browser implementation to dynamically add a reference to the FirestoreUI Javascript SDK.
+This is initialised as a Promise to allow the Browser implementation to dynamically add a reference to the FirestoreUI Javascript SDK.
 
 Not all of the above options will function on all platforms:
 
@@ -152,8 +146,7 @@ Not all of the above options will function on all platforms:
 - smartLockEnabled : enable SmartLock to store credentials - Android only (default true)
 - smartLockHints : enable SmartLock hints - Android only (default false)
 
-Browser configuration
---
+## Browser configuration
 In order for the above initialisation to work on a browser you need to include some extra configuration in the form of the `browser` section show below:
 
 ```
@@ -177,15 +170,11 @@ FirebaseUIAuth.initialise({
  });
 ```
 
-Methods
-==
-
-signIn()
---
+# Methods
+## signIn()
 Call this to start the sign in process based on the above configuration. This can raise the following events:
 
-signinsuccess
---
+### signinsuccess
 The user has signed in successfully. The following data is returned:
 
 ```
@@ -198,8 +187,7 @@ The user has signed in successfully. The following data is returned:
 }
 ```
 
-signinfailure
---
+### signinfailure
 Sign in failed for some reason. The following is returned:
 
 ```
@@ -209,30 +197,22 @@ Sign in failed for some reason. The following is returned:
 }
 ```
 
-signOut()
---
+## signOut()
 Sign the current user out of the application. This can raise the following events:
 
-signoutsuccess
---
+### signoutsuccess
 The user has signed out successfully.
 
-signoutfailure
---
+### signoutfailure
 Sign out failed for some reason.
 
-
-getToken()
---
+## getToken()
 Get an access token, returning a Promise.
 
-What platform configuration is carried out?
-==
-
+# What platform configuration is carried out?
 For iOS and Android a number of platform files are added or updated based on the supplied configuration.
 
-Android
---
+## Android
 
 `res/values/strings.xml`
 This has the following added:
@@ -246,8 +226,7 @@ This is either created or updated with the colour definitions supplied.
 `res/values/styles.xml`
 This is either created or updated with a style that uses the above colour definitions.
 
-iOS
---
+## iOS
 
 `*-Info.plist`
 
@@ -288,8 +267,7 @@ The following keys are added:
 </array>
 ```
 
-Browser security
-==
+# Browser security
 In order to ensure the browser implementation works, it will be necessary to configure the Content-Security-Policy meta tag with something similar to the following:
 
 ```
@@ -307,23 +285,18 @@ In order to ensure the browser implementation works, it will be necessary to con
                         https://*.firebaseio.com">
 ```
 
-History
-==
-0.0.4
---
+# History
+## 0.0.4
 - Experimental support for cordova-android 7
 - Increased dependency versions
 
-0.0.3
---
+## 0.0.3
 - Remove Java 7 dependency
 
-0.0.2
---
+## 0.0.2
 - Update README
 - Add grunt to run jshint
 - Fix some grunt warnings
 
-0.0.1
---
+## 0.0.1
 - Initial release
