@@ -34,8 +34,8 @@ cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_VE
     --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
     --variable FACEBOOK_APPLICATION_ID=12345678
     --variable FACEBOOK_DISPLAY_NAME="My application"
-    --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
-    --variable COLOR_PRIMARY="#ffffff"usercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
+    --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.9999999999-xxxxxxxxxxxxxxxxxxxxxxxxxx"
+    --variable COLOR_PRIMARY="#ffffff"
     --variable COLOR_PRIMARY="#ffffff"
     --variable COLOR_DARK_PRIMARY="#555555"
     --variable COLOR_LIGHT_PRIMARY="#aaaaaa"
@@ -53,7 +53,7 @@ phonegap plugin add cordova-plugin-firebaseui-auth  --variable ANDROID_FIREBASE_
     --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
     --variable FACEBOOK_APPLICATION_ID=12345678
     --variable FACEBOOK_DISPLAY_NAME="My application"
-    --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.262373026581-6jso41abne2jnlqhho4861hk41nsxvbe"
+    --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.9999999999-xxxxxxxxxxxxxxxxxxxxxxxxxx"
     --variable COLOR_PRIMARY="#ffffff"
     --variable COLOR_DARK_PRIMARY="#555555"
     --variable COLOR_LIGHT_PRIMARY="#aaaaaa"
@@ -286,6 +286,10 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 0.0.5
+- Change logo to be drawable rather than mipmap for Android
+- Remove leaked (and now deleted) client id
+
 ## 0.0.4
 - Experimental support for cordova-android 7
 - Increased dependency versions
