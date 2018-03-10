@@ -286,6 +286,9 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 0.0.6
+- Improve logging
+
 ## 0.0.5
 - Change logo to be drawable rather than mipmap for Android
 - Remove leaked (and now deleted) client id

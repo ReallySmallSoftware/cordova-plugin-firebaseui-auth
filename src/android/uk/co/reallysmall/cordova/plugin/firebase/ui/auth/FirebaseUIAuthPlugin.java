@@ -57,6 +57,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         } else if ("getToken".equals(action)) {
           return getToken(callbackContext);
         } else {
+          Log.w(TAG, "Unknown action : " + action);
           return false;
         }
     }
@@ -76,7 +77,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 anonymous = true;
             }
         } catch (JSONException ex) {
-            Log.d(TAG, "initialise: error getting options: " + ex.getMessage());
+            Log.e(TAG, "initialise: error getting options: " + ex.getMessage());
         }
 
         this.callbackContext = callbackContext;
@@ -138,7 +139,6 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                     providers.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
                 }
             }
-
         }
     }
 
@@ -200,6 +200,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             }
             instance = instance.setIsSmartLockEnabled(smartLockEnabled, smartLockHints);
         } catch (JSONException ex) {
+          Log.e(TAG, "Error in buildCustomInstance ", ex);
         }
 
         return instance;
@@ -248,7 +249,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "deleteUser: failure", e);
+                    Log.w(TAG, "deleteUser: failure", e);
                     raiseErrorEvent("deleteuserfailure", 1, "This operation requires you to have recently authenticated. Please log out and back in and try again.");
                 }
             });
@@ -285,6 +286,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             data.put("code", code);
             data.put("message", message);
         } catch (JSONException e) {
+          Log.e(TAG, "Error in raiseErrorEvent ", e);
         }
         raiseEvent(callbackContext, event, data);
     }
@@ -303,7 +305,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 resultData.put("photoUrl", user.getPhotoUrl().toString());
             }
         } catch (JSONException e) {
-            Log.d(TAG, e.getMessage());
+          Log.e(TAG, "Error in raiseEventForUser ", e);
         }
 
         raiseEvent(callbackContext, "signinsuccess", resultData);
@@ -342,7 +344,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 event.put("data", data);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+          Log.e(TAG, "Error in raiseEvent ", e);
         }
 
         PluginResult result = new PluginResult(PluginResult.Status.OK, event);
@@ -361,6 +363,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 data.put("code", err.getClass().getSimpleName());
                 data.put("message", err.getMessage());
             } catch (JSONException e) {
+              Log.e(TAG, "Error in onComplete ", e);
             }
             raiseEvent(callbackContext, "signinfailure", data);
         }
