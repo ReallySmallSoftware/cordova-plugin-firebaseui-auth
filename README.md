@@ -286,6 +286,9 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 0.0.7
+- Fix stupid cordova-android 7 detection
+
 ## 0.0.6
 - Improve logging
 

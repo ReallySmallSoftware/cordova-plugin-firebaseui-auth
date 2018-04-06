@@ -14,19 +14,19 @@ module.exports = {
       return null;
     }
 
-    var androidPath = context.opts.projectRoot + '/platforms/android';
+    var androidPath = context.opts.projectRoot + '/platforms/android/app/src/main';
 
     if (!fs.existsSync(androidPath)) {
-      androidPath = context.opts.projectRoot + '/platforms/android/app/src/main';
+      androidPath = context.opts.projectRoot + '/platforms/android';
 
       if (!fs.existsSync(androidPath)) {
         console.log("Unable to detect type of cordova-android application structure");
         throw new Error("Unable to detect type of cordova-android application structure");
       } else {
-        console.log("Detected cordova-android 7 application structure");
+        console.log("Detected pre cordova-android 7 application structure");
       }
     } else {
-      console.log("Detected pre cordova-android 7 application structure");
+      console.log("Detected cordova-android 7 application structure");
     }
 
     return androidPath;
@@ -43,19 +43,19 @@ module.exports = {
       return null;
     }
 
-    var androidPath = context.opts.projectRoot + '/platforms/android/src';
+    var androidPath = context.opts.projectRoot + '/platforms/android/app/src/main/java';
 
     if (!fs.existsSync(androidPath)) {
-      androidPath = context.opts.projectRoot + '/platforms/android/app/src/main/java';
+      androidPath = context.opts.projectRoot + '/platforms/android/src';
 
       if (!fs.existsSync(androidPath)) {
         console.log("Unable to detect type of cordova-android application structure");
         throw new Error("Unable to detect type of cordova-android application structure");
       } else {
-        console.log("Detected cordova-android 7 application structure");
+        console.log("Detected pre cordova-android 7 application structure");
       }
     } else {
-      console.log("Detected pre cordova-android 7 application structure");
+      console.log("Detected cordova-android 7 application structure");
     }
 
     return androidPath;
