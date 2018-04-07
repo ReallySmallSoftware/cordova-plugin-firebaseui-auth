@@ -180,5 +180,59 @@
         <item name="android:padding">24dp</item>
       </style>
     </config-file>
+
+    <config-file target="app/src/main/res/values/strings.xml" parent="/*">
+      <string name="facebook_application_id">$FACEBOOK_APPLICATION_ID</string>
+      <string name="facebook_login_protocol_scheme">fb$FACEBOOK_APPLICATION_ID</string>
+    </config-file>
+
+    <config-file target="app/src/main/res/values/color.xml" parent="/*">
+      <color name="firebaseUiColorPrimary">$COLOR_PRIMARY</color>
+      <color name="firebaseUiColorPrimaryDark">$COLOR_DARK_PRIMARY</color>
+      <color name="firebaseUiColorPrimaryLight">$COLOR_LIGHT_PRIMARY</color>
+      <color name="firebaseUiColorAccent">$COLOR_ACCENT</color>
+      <color name="firebaseUiColorSecondary">$COLOR_SECONDARY</color>
+      <color name="firebaseUiColorControl">$COLOR_CONTROL</color>
+      <color name="firebaseUiColorBackground">$COLOR_BACKGROUND</color>
+    </config-file>
+
+    <config-file target="app/src/main/res/values/styles.xml" parent="/*">
+      <style name="FirebaseUILogonTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/firebaseUiColorPrimary</item>
+        <item name="colorPrimaryDark">@color/firebaseUiColorPrimaryDark</item>
+        <item name="colorAccent">@color/firebaseUiColorAccent</item>
+        <item name="colorButtonNormal">@color/firebaseUiColorAccent</item>
+        <item name="colorControlNormal">@color/firebaseUiColorControl</item>
+        <item name="colorControlActivated">@color/firebaseUiColorControl</item>
+        <item name="colorControlHighlight">@color/firebaseUiColorControl</item>
+        <item name="android:textColor">@color/firebaseUiColorControl</item>
+        <item name="android:textColorPrimary">@color/firebaseUiColorControl</item>
+        <item name="android:textColorSecondary">@color/firebaseUiColorControl</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorHint">@color/firebaseUiColorControl</item>
+        <item name="android:background">@color/firebaseUiColorBackground</item>
+        <item name="android:windowBackground">@color/firebaseUiColorBackground</item>
+        <item name="android:colorBackground">@color/firebaseUiColorBackground</item>
+      </style>
+
+      <style name="FirebaseUI.Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/firebaseUiColorControl</item>
+      </style>
+
+      <style name="FirebaseUI.Text.Link">
+        <item name="android:textColor">@color/firebaseUiColorSecondary</item>
+      </style>
+
+      <style name="FirebaseUI.AuthMethodPicker.Logo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">24dp</item>
+      </style>
+    </config-file>
   </platform>
 </plugin>
