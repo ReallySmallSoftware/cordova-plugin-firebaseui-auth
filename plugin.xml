@@ -89,9 +89,9 @@
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
 
-    <framework src="FirebaseUI/Auth" type="podspec" spec="~> 5.0.1"/>
-    <framework src="FirebaseUI/Google" type="podspec" spec="~> 5.0.1"/>
-    <framework src="FirebaseUI/Facebook" type="podspec" spec="~> 5.0.1"/>
+    <framework src="FirebaseUI/Auth" type="podspec" spec="~> 5.0.0"/>
+    <framework src="FirebaseUI/Google" type="podspec" spec="~> 5.0.0"/>
+    <framework src="FirebaseUI/Facebook" type="podspec" spec="~> 5.0.0"/>
   </platform>
 
   <platform name="android">

@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <Cordova/CDV.h>
 @import Firebase;
-@import FirebaseAuthUI;
+@import FirebaseUI;
 
 @interface FirebaseUIAuthPlugin : CDVPlugin < FUIAuthDelegate >
 

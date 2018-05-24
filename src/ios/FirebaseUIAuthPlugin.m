@@ -1,8 +1,6 @@
 #import "FirebaseUIAuthPlugin.h"
 @import Firebase;
-@import FirebaseAuthUI;
-@import FirebaseGoogleAuthUI;
-@import FirebaseFacebookAuthUI;
+@import FirebaseUI;
 
 @implementation FirebaseUIAuthPlugin
 
@@ -94,25 +92,25 @@
 
     if (user == nil) {
 
-        [[FIRAuth auth] signInAnonymouslyWithCompletion:^(FIRUser * _Nullable user, NSError * _Nullable error) {
-            if (user != nil) {
-                [self raiseEventForUser:user];
+        [[FIRAuth auth] signInAnonymouslyWithCompletion:^(FIRAuthDataResult * _Nullable authResult, NSError * _Nullable error) {
+            if ([authResult user] != nil) {
+                [self raiseEventForUser:[authResult user]];
             } else if (error != nil) {
                 NSDictionary *data = nil;
-
+                
                 if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
                     data = @{
                              @"code" : [error localizedFailureReason],
                              @"message" : [error localizedDescription]
                              };
                 } else {
-
+                    
                     data = @{
                              @"code" : @-1,
                              @"message" : @"Unknown failure reason"
                              };
                 }
-
+                
                 [self raiseEvent:@"signinfailure" withData:data];
             }
         }];
