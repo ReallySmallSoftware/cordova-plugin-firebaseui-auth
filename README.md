@@ -29,8 +29,8 @@ Follow the instructions for each of the platforms and providers you wish you use
 # Installation
 
 ```
-cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_CORE_VERSION=15.0.2
-    --variable ANDROID_FIREBASE_AUTH_VERSION=15.1.0
+cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_CORE_VERSION=16.0.0
+    --variable ANDROID_FIREBASE_AUTH_VERSION=16.0.1
     --variable ANDROID_PLAY_SERVICES_AUTH_VERSION=15.0.1
     --variable ANDROID_FIREBASEUI_VERSION=3.3.1
     --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
@@ -50,8 +50,8 @@ cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_CO
 or
 
 ```
-phonegap plugin add cordova-plugin-firebaseui-auth  --variable ANDROID_FIREBASE_CORE_VERSION=15.0.2
-    --variable ANDROID_PLAY_SERVICES_AUTH_VERSION=15.0.1
+phonegap plugin add cordova-plugin-firebaseui-auth  --variable ANDROID_FIREBASE_CORE_VERSION=16.0.0
+    --variable ANDROID_PLAY_SERVICES_AUTH_VERSION=16.0.1
     --variable ANDROID_FIREBASE_AUTH_VERSION=15.1.0
     --variable ANDROID_FIREBASEUI_VERSION=3.3.1
     --variable ANDROID_FACEBOOK_SDK_VERSION=4.31.0
@@ -295,7 +295,7 @@ In order to ensure the browser implementation works, it will be necessary to con
 ## 0.0.8
 - Update Android dependency versions
 - Update iOS dependency versions
-- WARNING: The Android update may require you to update com.google.gms:google-services to 3.2.1, com.android.tools.build:gradle to 3.1.2 and gradle to 4.4.4 (look in platforms/android/cordova/lib/builders/GradleBuilder.js)
+- WARNING: The Android update may require you to update com.google.gms:google-services to 4.0.0, com.android.tools.build:gradle to 3.1.2 and gradle to 4.4.4 (look in platforms/android/cordova/lib/builders/GradleBuilder.js)
 
 ## 0.0.7
 - Fix stupid cordova-android 7 detection
