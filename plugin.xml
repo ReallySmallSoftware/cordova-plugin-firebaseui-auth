@@ -9,10 +9,10 @@
   <issue>https://github.com/ReallySmallSoftware/cordova-plugin-firebaseui-auth/issues</issue>
 
   <engines>
-    <engine name="cordova" version=">=6.0.0"/>
-    <engine name="cordova-android" version=">=4.0.0"/>
-    <engine name="cordova-plugman" version=">=4.2.0"/>
-    <engine name="cordova-ios" version=">=4.5.4"/>
+    <engine name="cordova" version=">=7.0.0" />
+    <engine name="cordova-android" version=">=5.0.0" />
+    <engine name="cordova-plugman" version=">=4.2.0" />
+    <engine name="cordova-ios" version=">=4.0.0" />
   </engines>
 
   <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>

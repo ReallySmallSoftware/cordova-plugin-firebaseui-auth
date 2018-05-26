@@ -295,6 +295,7 @@ In order to ensure the browser implementation works, it will be necessary to con
 ## 0.0.8
 - Update Android dependency versions
 - Update iOS dependency versions
+- Update plugin dependencies
 - WARNING: The Android update may require you to update com.google.gms:google-services to 4.0.0, com.android.tools.build:gradle to 3.1.2 and gradle to 4.4.4 (look in platforms/android/cordova/lib/builders/GradleBuilder.js)
 
 ## 0.0.7
