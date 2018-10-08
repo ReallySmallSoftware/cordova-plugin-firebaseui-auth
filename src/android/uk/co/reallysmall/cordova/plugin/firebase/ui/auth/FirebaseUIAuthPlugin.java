@@ -8,6 +8,7 @@ import android.util.Log;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,19 +48,61 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         Log.d(TAG, "action : " + action);
 
         if ("initialise".equals(action)) {
-          return initialise(args, callbackContext);
+            return initialise(args, callbackContext);
         } else if ("signIn".equals(action)) {
-          return signIn(callbackContext);
+            return signIn(callbackContext);
         } else if ("signOut".equals(action)) {
-          return signOut(callbackContext);
+            return signOut(callbackContext);
         } else if ("deleteUser".equals(action)) {
-          return deleteUser(callbackContext);
+            return deleteUser(callbackContext);
         } else if ("getToken".equals(action)) {
-          return getToken(callbackContext);
+            return getToken(callbackContext);
+        } else if ("sendEmailVerification".equals(action)) {
+            return sendEmailVerification(callbackContext);
+        } else if ("reloadUser".equals(action)) {
+            return reloadUser(callbackContext);
         } else {
-          Log.w(TAG, "Unknown action : " + action);
-          return false;
+            Log.w(TAG, "Unknown action : " + action);
+            return false;
         }
+    }
+
+    private boolean reloadUser(CallbackContext callbackContext) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user != null) {
+            user.reload().addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                @Override
+                public void onSuccess(Void aVoid) {
+                   FirebaseUser user = firebaseAuth.getCurrentUser();
+                   raiseEventForUser(user);
+                }
+             });
+        }
+
+        return true;
+    }
+
+    private boolean sendEmailVerification(final CallbackContext callbackContext) {
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user != null && !anonymous) {
+
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()) {
+                        raiseEvent(callbackContext, "emailverificationsent", null);
+                    } else {
+                        raiseEvent(callbackContext, "emailverificationnotsent", null);
+                    }
+                }
+            });
+        }
+
+        return true;
     }
 
     private boolean initialise(JSONArray args, final CallbackContext callbackContext) {
@@ -200,7 +243,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             }
             instance = instance.setIsSmartLockEnabled(smartLockEnabled, smartLockHints);
         } catch (JSONException ex) {
-          Log.e(TAG, "Error in buildCustomInstance ", ex);
+            Log.e(TAG, "Error in buildCustomInstance ", ex);
         }
 
         return instance;
@@ -286,7 +329,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             data.put("code", code);
             data.put("message", message);
         } catch (JSONException e) {
-          Log.e(TAG, "Error in raiseErrorEvent ", e);
+            Log.e(TAG, "Error in raiseErrorEvent ", e);
         }
         raiseEvent(callbackContext, event, data);
     }
@@ -297,15 +340,23 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         Log.d(TAG, "raiseEventForUser");
 
         try {
+
+            anonymous = false;
+
             resultData.put("name", user.getDisplayName());
             resultData.put("email", user.getEmail());
             resultData.put("emailVerified", user.isEmailVerified());
             resultData.put("id", user.getUid());
+            if (user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
+                resultData.put("newUser", true);
+            } else {
+                resultData.put("newUser", false);
+            }
             if (user.getPhotoUrl() != null) {
                 resultData.put("photoUrl", user.getPhotoUrl().toString());
             }
         } catch (JSONException e) {
-          Log.e(TAG, "Error in raiseEventForUser ", e);
+            Log.e(TAG, "Error in raiseEventForUser ", e);
         }
 
         raiseEvent(callbackContext, "signinsuccess", resultData);
@@ -344,7 +395,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 event.put("data", data);
             }
         } catch (JSONException e) {
-          Log.e(TAG, "Error in raiseEvent ", e);
+            Log.e(TAG, "Error in raiseEvent ", e);
         }
 
         PluginResult result = new PluginResult(PluginResult.Status.OK, event);
@@ -363,7 +414,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 data.put("code", err.getClass().getSimpleName());
                 data.put("message", err.getMessage());
             } catch (JSONException e) {
-              Log.e(TAG, "Error in onComplete ", e);
+                Log.e(TAG, "Error in onComplete ", e);
             }
             raiseEvent(callbackContext, "signinfailure", data);
         }

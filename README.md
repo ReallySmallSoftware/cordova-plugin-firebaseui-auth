@@ -38,7 +38,6 @@ cordova plugin add cordova-plugin-firebaseui-auth --variable ANDROID_FIREBASE_CO
     --variable FACEBOOK_DISPLAY_NAME="My application"
     --variable REVERSED_CLIENT_ID="com.googleusercontent.apps.9999999999-xxxxxxxxxxxxxxxxxxxxxxxxxx"
     --variable COLOR_PRIMARY="#ffffff"
-    --variable COLOR_PRIMARY="#ffffff"
     --variable COLOR_DARK_PRIMARY="#555555"
     --variable COLOR_LIGHT_PRIMARY="#aaaaaa"
     --variable COLOR_ACCENT="#7C4DFF"
@@ -215,6 +214,26 @@ Sign out failed for some reason.
 ## getToken()
 Get an access token, returning a Promise.
 
+## deleteUser()
+
+### deleteusersuccess
+The user was deleted successfully.
+
+### deleteuserfailure
+The user was not deleted.
+
+## sendEmailVerification()
+Sends a verification email for the current user.
+
+### emailverificationsent
+The email verification was sent.
+
+### emailverificationnotsent
+The email verification was not sent.
+
+## reloadUser
+Reloads user details. Useful after a verification link has been used. A signinsuccess event will be raised.
+
 # What platform configuration is carried out?
 For iOS and Android a number of platform files are added or updated based on the supplied configuration.
 
@@ -292,6 +311,11 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 0.0.9
+- Added missing documentation for deleteUser() method
+- Added sendEmailVerification() method
+- Added property newUser to user details. Only true when user us first created.
+
 ## 0.0.8
 - Update Android dependency versions
 - Update iOS dependency versions

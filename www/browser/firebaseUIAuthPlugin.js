@@ -133,13 +133,30 @@ function FirebaseUIAuth(options, resolve) {
     return false;
   };
 
+  this.reloadUser = function() {
+
+    var self = this;
+
+    firebase.auth().currentUser.reload().then(function() {
+      self.raiseEventForUser(firebase.auth().currentUser);
+    });
+  };
+
   this.raiseEventForUser = function(user) {
+
+    var newUser = false;
+
+    if (user.metadata.creationTime === user.metadata.lastSignInTime) {
+      newUser = true;
+    }
+
     var detail = {
       "detail": {
         "name": user.displayName,
         "email": user.email,
         "emailVerified": user.emailVerified,
-        "id": user.uid
+        "id": user.uid,
+        "newUser": newUser
       }
     };
 
@@ -184,6 +201,20 @@ function FirebaseUIAuth(options, resolve) {
       ui.start('#' + this.uiElement, this.uiConfig);
     }
   };
+
+  this.sendEmailVerification = function() {
+
+    var currentUser = firebase.auth().currentUser;
+    var customEvent;
+
+    currentUser.sendEmailVerification().then(function() {
+      customEvent = new CustomEvent("emailverificationsent", {});
+      window.dispatchEvent(customEvent);
+    }, function(error) {
+      customEvent = new CustomEvent("emailverificationnotsent", {});
+      window.dispatchEvent(customEvent);
+    });
+  }
 
   this.signOut = function() {
     firebase.auth().signOut();

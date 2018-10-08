@@ -212,6 +212,44 @@ options:(NSDictionary *)options {
     }
 }
 
+- (void)sendEmailVerification:(CDVInvokedUrlCommand *)command {
+
+    @try {
+        
+        FIRUser *user = [[FIRAuth auth] currentUser];
+        
+        [user sendEmailVerificationWithCompletion:^(NSError * _Nullable error) {
+            if (error) {
+                [self raiseEvent:@"emailverificationnotsent" withData:nil];
+            } else {
+                [self raiseEvent:@"emailverificationsent" withData:nil];
+                [self signInAnonymous];
+            }
+        }];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"SignOut error %@", [exception reason]);
+        @throw exception;
+    }
+}
+
+- (void)reloadUser:(CDVInvokedUrlCommand *)command {
+
+    @try {
+        
+        FIRUser *user = [[FIRAuth auth] currentUser];
+        
+        [user reload:^(NSError * _Nullable error);
+
+        [self raiseEventForUser:user];
+
+    }
+    @catch (NSException *exception) {
+        NSLog(@"SignOut error %@", [exception reason]);
+        @throw exception;
+    }
+}
+
 - (void)authUI:(nonnull FUIAuth *)authUI didSignInWithUser:(nullable FIRUser *)user error:(nullable NSError *)error {
     if (error == nil) {
         [self raiseEventForUser:user];
@@ -242,10 +280,18 @@ options:(NSDictionary *)options {
 
     NSNumber *isEmailVerified;
 
+    NSNumber *newUser;
+
     if ([user isEmailVerified]) {
         isEmailVerified = @YES;
     } else {
         isEmailVerified = @NO;
+    }
+
+    if ([user metaData]) {
+        newUser = @YES;
+    } else {
+        newUser = @NO;
     }
 
     if ([user photoURL] != nil) {
@@ -253,13 +299,15 @@ options:(NSDictionary *)options {
                     @"emailVerified" : isEmailVerified,
                     @"name" : [self emptyIfNull:[user displayName]],
                     @"id" : [self emptyIfNull:[user uid]],
-                    @"photoUrl" : [[user photoURL] absoluteString]
+                    @"photoUrl" : [[user photoURL] absoluteString],
+                    @"newUser" : newUser
                     };
     } else {
         result = @{@"email" : [self emptyIfNull:[user email]],
                    @"emailVerified" : isEmailVerified,
                    @"name" : [self emptyIfNull:[user displayName]],
-                   @"id" : [self emptyIfNull:[user uid]]
+                   @"id" : [self emptyIfNull:[user uid]],
+                   @"newUser" : newUser
                    };
     }
 

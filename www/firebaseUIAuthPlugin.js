@@ -32,6 +32,13 @@ function FirebaseUIAuth(options) {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'deleteUser', []);
   };
 
+  this.sendEmailVerification = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'sendEmailVerification', []);
+  }
+
+  this.reloadUser = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'reloadUser', []);
+  }
 }
 
 module.exports = {
