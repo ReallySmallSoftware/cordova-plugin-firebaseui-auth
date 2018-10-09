@@ -239,10 +239,11 @@ options:(NSDictionary *)options {
         
         FIRUser *user = [[FIRAuth auth] currentUser];
         
-        [user reload:^(NSError * _Nullable error);
-
-        [self raiseEventForUser:user];
-
+        [user reloadWithCompletion:^(NSError * _Nullable error) {
+            FIRUser *user = [[FIRAuth auth] currentUser];
+            
+            [self raiseEventForUser:user];
+        }];
     }
     @catch (NSException *exception) {
         NSLog(@"SignOut error %@", [exception reason]);
@@ -281,14 +282,21 @@ options:(NSDictionary *)options {
     NSNumber *isEmailVerified;
 
     NSNumber *newUser;
-
+    
+    self.anonymous = false;
+    
     if ([user isEmailVerified]) {
         isEmailVerified = @YES;
     } else {
         isEmailVerified = @NO;
     }
 
-    if ([user metaData]) {
+    FIRUserMetadata *metadata = [user metadata];
+    
+    NSDate *lastSignInDate = [metadata lastSignInDate];
+    NSDate *creationDate = [metadata creationDate];
+    
+    if ([lastSignInDate compare:creationDate] == NSOrderedSame) {
         newUser = @YES;
     } else {
         newUser = @NO;
