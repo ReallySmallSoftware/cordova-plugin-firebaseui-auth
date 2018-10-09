@@ -188,7 +188,8 @@ The user has signed in successfully. The following data is returned:
   email: 'user email',
   emailVerified: true | false,
   photoUrl: 'url of user image if available',
-  id: <user id>
+  id: <user id>,
+  newUser: true | false
 }
 ```
 
@@ -215,6 +216,7 @@ Sign out failed for some reason.
 Get an access token, returning a Promise.
 
 ## deleteUser()
+Delete the current user. This can raise the following events:
 
 ### deleteusersuccess
 The user was deleted successfully.
@@ -223,7 +225,7 @@ The user was deleted successfully.
 The user was not deleted.
 
 ## sendEmailVerification()
-Sends a verification email for the current user.
+Sends a verification email for the current user. This can raise the following events:
 
 ### emailverificationsent
 The email verification was sent.
@@ -314,6 +316,7 @@ In order to ensure the browser implementation works, it will be necessary to con
 ## 0.0.9
 - Added missing documentation for deleteUser() method
 - Added sendEmailVerification() method
+- Added reloadUser() method
 - Added property newUser to user details. Only true when user us first created.
 
 ## 0.0.8

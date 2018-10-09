@@ -214,7 +214,7 @@ function FirebaseUIAuth(options, resolve) {
       customEvent = new CustomEvent("emailverificationnotsent", {});
       window.dispatchEvent(customEvent);
     });
-  }
+  };
 
   this.signOut = function() {
     firebase.auth().signOut();
