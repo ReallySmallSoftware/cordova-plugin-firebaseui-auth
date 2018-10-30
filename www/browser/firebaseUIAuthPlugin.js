@@ -71,8 +71,8 @@ function FirebaseUIAuth(options, resolve) {
     }
   }
 
-  loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase.js', firebaseLoaded, function() {
-    loadJS('https://www.gstatic.com/firebasejs/4.8.1/firebase-auth.js', firebaseAuthLoaded, function() {
+  loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js', firebaseLoaded, function() {
+    loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-auth.js', firebaseAuthLoaded, function() {
       loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function() {
         loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', firebaseUILoaded, initialise, document.body);
       }, document.body);
