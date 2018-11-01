@@ -325,6 +325,7 @@ In order to ensure the browser implementation works, it will be necessary to con
 - Add support for ANONYMOUS provider (on Android)
 - Attempted to handle merging of anonymous users
 - Allowed iOS pods to use latest
+- Android logo disabled due to possible bug in FirebaseUI
 
 ## 0.0.10
 - Update JS Firebase dependencies

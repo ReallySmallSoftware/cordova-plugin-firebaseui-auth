@@ -241,7 +241,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         try {
             if (options.has("logo")) {
                 int id = getIdentifier(options.getString("logo"), "drawable");
-            //    instance = instance.setLogo(id);
+              //  instance = instance.setLogo(id);
             }
             if (options.has("theme")) {
                 int id = getIdentifier(options.getString("theme"), "style");
