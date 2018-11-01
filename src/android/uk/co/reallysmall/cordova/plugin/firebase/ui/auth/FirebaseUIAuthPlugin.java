@@ -6,10 +6,13 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,11 +31,11 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteListener<AuthResult>, FirebaseAuth.AuthStateListener {
+public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteListener<AuthResult> {
     private static final int RC_SIGN_IN = 123;
     private final String TAG = "FirebaseUIAuthPlugin";
     List<AuthUI.IdpConfig> providers = Arrays.asList(
-            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+            new AuthUI.IdpConfig.EmailBuilder().build());
     private CallbackContext callbackContext;
     private FirebaseAuth firebaseAuth;
     private JSONObject options;
@@ -51,6 +54,8 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             return initialise(args, callbackContext);
         } else if ("signIn".equals(action)) {
             return signIn(callbackContext);
+        } else if ("signInAnonymously".equals(action)) {
+            return signInAnonymously(callbackContext);
         } else if ("signOut".equals(action)) {
             return signOut(callbackContext);
         } else if ("deleteUser".equals(action)) {
@@ -80,6 +85,13 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 }
              });
         }
+
+        return true;
+    }
+
+    private boolean signInAnonymously(CallbackContext callbackContext) {
+
+        signInAnonymous(firebaseAuth);
 
         return true;
     }
@@ -127,14 +139,14 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        firebaseAuth.addAuthStateListener(this);
-        this.signInAnonymous(firebaseAuth);
-
         return true;
     }
 
     private void signInAnonymous(final FirebaseAuth firebaseAuth) {
-        if (firebaseAuth.getCurrentUser() == null && anonymous) {
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user == null && anonymous) {
             firebaseAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -167,19 +179,25 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 Log.d(TAG, "createProviderList: parsing provider " + providerList.getString(i));
 
                 if ("EMAIL".equals(providerList.getString(i))) {
-                    providers.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+                    providers.add(new AuthUI.IdpConfig.EmailBuilder().build());
                 }
                 if ("FACEBOOK".equals(providerList.getString(i))) {
-                    providers.add(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build());
+                    providers.add(new AuthUI.IdpConfig.FacebookBuilder().build());
                 }
                 if ("GOOGLE".equals(providerList.getString(i))) {
-                    providers.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+                    providers.add(new AuthUI.IdpConfig.GoogleBuilder().build());
                 }
                 if ("PHONE".equals(providerList.getString(i))) {
-                    providers.add(new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build());
+                    providers.add(new AuthUI.IdpConfig.PhoneBuilder().build());
                 }
                 if ("TWITTER".equals(providerList.getString(i))) {
-                    providers.add(new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build());
+                    providers.add(new AuthUI.IdpConfig.TwitterBuilder().build());
+                }
+                if ("GITHUB".equals(providerList.getString(i))) {
+                    providers.add(new AuthUI.IdpConfig.GitHubBuilder().build());
+                }
+                if ("ANONYMOUS".equals(providerList.getString(i))) {
+                    providers.add(new AuthUI.IdpConfig.AnonymousBuilder().build());
                 }
             }
         }
@@ -199,8 +217,11 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         } else {
             Log.d(TAG, "signIn: sign in");
 
+            cordova.setActivityResultCallback(this);
+
             cordova.getActivity().startActivityForResult(
                     this.buildCustomInstance()
+                            .enableAnonymousUsersAutoUpgrade()
                             .setAvailableProviders(providers)
                             .build(),
                     RC_SIGN_IN);
@@ -220,7 +241,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         try {
             if (options.has("logo")) {
                 int id = getIdentifier(options.getString("logo"), "drawable");
-                instance = instance.setLogo(id);
+            //    instance = instance.setLogo(id);
             }
             if (options.has("theme")) {
                 int id = getIdentifier(options.getString("theme"), "style");
@@ -229,11 +250,15 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 int id = getIdentifier("FirebaseUILogonTheme", "style");
                 instance = instance.setTheme(id);
             }
-            if (options.has("tosUrl")) {
-                instance = instance.setTosUrl(options.getString("tosUrl"));
-            }
-            if (options.has("privacyPolicyUrl")) {
-                instance = instance.setPrivacyPolicyUrl(options.getString("privacyPolicyUrl"));
+            if (options.has("tosUrl") && options.has("privacyPolicyUrl")) {
+                instance = instance.setTosAndPrivacyPolicyUrls(options.getString("tosUrl"),options.getString("privacyPolicyUrl"));
+            } else {
+                if (options.has("tosUrl")) {
+                    instance = instance.setTosUrl(options.getString("tosUrl"));
+                }
+                if (options.has("privacyPolicyUrl")) {
+                    instance = instance.setPrivacyPolicyUrl(options.getString("privacyPolicyUrl"));
+                }
             }
             if (options.has("smartLockEnabled")) {
                 smartLockEnabled = options.getBoolean("smartLockEnabled");
@@ -255,14 +280,81 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 cordova.getActivity().getApplicationContext().getPackageName());
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult");
+        Log.d(TAG, "onActivityResult:requestCode:" + requestCode);
+
+        if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "onActivityResult:resultCode:" + resultCode);
+
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                raiseEventForUser(user);
+            } else {
+                if (response == null) {
+                    signInAnonymous(firebaseAuth);
+                    raiseEvent(callbackContext, "signinaborted", null);
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.ANONYMOUS_UPGRADE_MERGE_CONFLICT) {
+                    handleAnonymousUpgradeMergeConflict(response);
+                } else {
+
+                    if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        raiseErrorEvent("signinfailure", response.getError().getErrorCode(), "No network so unable to sign in.");
+
+                        return;
+                    }
+
+                    Log.e(TAG, "Sign-in error: ", response.getError());
+                    raiseErrorEvent("signinfailure", response.getError().getErrorCode(), "There was a problem signing in.");
+                }
+            }
+        }
+    }
+
+    private void handleAnonymousUpgradeMergeConflict(IdpResponse response) {
+        AuthCredential nonAnonymousCredential = response.getCredentialForLinking();
+
+        FirebaseAuth.getInstance().signInWithCredential(nonAnonymousCredential)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult result) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        raiseEventForUser(user);
+                    }
+                });
+    }
+
     private boolean signOut(CallbackContext callbackContext) {
 
         Log.d(TAG, "signOut");
 
-        AuthUI.getInstance().signOut((FragmentActivity) cordova.getActivity());
-        raiseEvent(callbackContext, "signoutsuccess", null);
+        AuthUI.getInstance().signOut((FragmentActivity) cordova.getActivity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
 
-        this.signInAnonymous(firebaseAuth);
+                    Log.d(TAG, "signOut: success");
+
+                    raiseEvent(callbackContext, "signoutsuccess", null);
+                    signInAnonymous(firebaseAuth);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "signOut: failure", e);
+                raiseErrorEvent("signoutfailure", 1, "There was a problem signing out.");
+            }
+        });
 
         return true;
     }
@@ -365,25 +457,6 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG, "onActivityResult");
-        Log.d(TAG, "onActivityResult:requestCode:" + requestCode);
-
-        if (requestCode == RC_SIGN_IN) {
-            Log.d(TAG, "onActivityResult:resultCode:" + resultCode);
-
-            if (resultCode == RESULT_OK) {
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                raiseEventForUser(user);
-            }
-        }
-    }
-
-
     private void raiseEvent(CallbackContext callbackContext, String type, Object data) {
 
         Log.d(TAG, "raiseEvent: " + type);
@@ -417,24 +490,6 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 Log.e(TAG, "Error in onComplete ", e);
             }
             raiseEvent(callbackContext, "signinfailure", data);
-        }
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-        Log.d(TAG, "onAuthStateChanged");
-
-        final FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            Log.d(TAG, "onAuthStateChanged: signed in");
-
-            raiseEventForUser(user);
-
-        } else {
-            Log.d(TAG, "onAuthStateChanged: signed out");
-
-            raiseEvent(callbackContext, "signoutsuccess", null);
         }
     }
 }

@@ -24,6 +24,10 @@ function FirebaseUIAuth(options) {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', []);
   };
 
+  this.signInAnonymously = function() {
+    return exec(dispatchEvent, null, PLUGIN_NAME, 'signInAnonymously', []);
+  };
+
   this.signOut = function() {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'signOut', []);
   };

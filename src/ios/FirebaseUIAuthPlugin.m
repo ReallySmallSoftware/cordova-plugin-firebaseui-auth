@@ -36,15 +36,15 @@
             self.anonymous = true;
         }
 
-        [[FIRAuth auth] addAuthStateDidChangeListener:^(FIRAuth * _Nonnull auth, FIRUser * _Nullable user) {
-            if (user != nil) {
-                [self raiseEventForUser:user];
-            } else {
-                [self raiseEvent:@"signoutsuccess" withData:nil];
-            }
-        }];
+   //     [[FIRAuth auth] addAuthStateDidChangeListener:^(FIRAuth * _Nonnull auth, FIRUser * _Nullable user) {
+    //        if (user != nil) {
+   //             [self raiseEventForUser:user];
+    //       } else {
+     //           [self raiseEvent:@"signoutsuccess" withData:nil];
+     //       }
+     //   }];
 
-        [self signInAnonymous];
+      //  [self signInAnonymous];
     }
     @catch (NSException *exception) {
         NSLog(@"Initialise error %@", [exception reason]);

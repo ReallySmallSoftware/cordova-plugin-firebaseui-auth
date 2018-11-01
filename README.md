@@ -147,7 +147,7 @@ Not all of the above options will function on all platforms:
 - theme: a theme identifier for styling - Android only
 - logo: a logo to display - Android only
 - uiElement: a jQuery selector for web login - Web only
-- anonymous : if true log in an an anonymous user upon initialisation (default false)
+- anonymous : if true log in an anonymous user if other attempts fail (default false)
 - smartLockEnabled : enable SmartLock to store credentials - Android only (default true)
 - smartLockHints : enable SmartLock hints - Android only (default false)
 
@@ -156,7 +156,7 @@ In order for the above initialisation to work on a browser you need to include s
 
 ```
 FirebaseUIAuth.initialise({
-   "providers": ["GOOGLE", "FACEBOOK", "EMAIL"],
+   "providers": ["GOOGLE", "FACEBOOK", "EMAIL", "ANONYMOUS"],
    "tosUrl" : "http://www.myapp.co.uk/terms.html",
    "privacyPolicyUrl" : "http://www.myapp.co.uk/privacy.html",
    "theme" : "themeName",
@@ -176,6 +176,9 @@ FirebaseUIAuth.initialise({
 ```
 
 # Methods
+## signInAnonymously()
+Call this to sign in anonymously.
+
 ## signIn()
 Call this to start the sign in process based on the above configuration. This can raise the following events:
 
@@ -202,6 +205,9 @@ Sign in failed for some reason. The following is returned:
   message: 'failure message'
 }
 ```
+
+## signinaborted
+Sign in has been aborted by the user, by closing the sign in window.
 
 ## signOut()
 Sign the current user out of the application. This can raise the following events:
@@ -313,6 +319,11 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 1.-.0
+- Major Android dependency update to 4.2.1
+- Breaking change around meaning of 'anonymous' configuration option
+- Add support for ANONYMOUS provider
+
 ## 0.0.10
 - Update JS Firebase dependencies
 

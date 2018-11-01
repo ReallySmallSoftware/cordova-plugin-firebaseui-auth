@@ -36,9 +36,6 @@ var loadCSS = function(url, loaded, implementationCode, location) {
 function FirebaseUIAuth(options, resolve) {
 
   var self = this;
-  var uiConfig;
-  var uiElement;
-  var anonymous;
 
   var initialise = function() {
     if (firebase.apps.length === 0) {
@@ -50,7 +47,6 @@ function FirebaseUIAuth(options, resolve) {
     });
 
     self.anonymous = options.anonymous ? true : false;
-    self.signInAnonymously();
 
     var providers = self.buildProviders(options.providers);
     self.buildUIConfig(options, providers);
