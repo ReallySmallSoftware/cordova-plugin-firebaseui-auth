@@ -35,16 +35,6 @@
         if ([anonymous isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             self.anonymous = true;
         }
-
-   //     [[FIRAuth auth] addAuthStateDidChangeListener:^(FIRAuth * _Nonnull auth, FIRUser * _Nullable user) {
-    //        if (user != nil) {
-   //             [self raiseEventForUser:user];
-    //       } else {
-     //           [self raiseEvent:@"signoutsuccess" withData:nil];
-     //       }
-     //   }];
-
-      //  [self signInAnonymous];
     }
     @catch (NSException *exception) {
         NSLog(@"Initialise error %@", [exception reason]);
@@ -162,6 +152,79 @@
     }
 }
 
+- (void)authUI:(FUIAuth *)authUI didSignInWithAuthDataResult:(nullable FIRAuthDataResult *)authDataResult
+         error:(nullable NSError *)error {
+
+    NSDictionary *data = nil;
+
+    if (error == nil) {
+        [self raiseEventForUser:authDataResult.user];
+    } else {
+
+        if (error.code == FUIAuthErrorCodeUserCancelledSignIn) {
+            
+            [self signInAnonymous];
+            [self raiseEvent:@"signinaborted" withData:data];
+            
+            return;
+        }
+
+        if (error.code == FUIAuthErrorCodeMergeConflict) {
+            FIRAuthCredential *authCredential = [error.userInfo valueForKey:FUIAuthCredentialKey];
+            
+            if (authCredential != nil) {
+                [[FIRAuth auth] signInAndRetrieveDataWithCredential:authCredential completion:^(FIRAuthDataResult * _Nullable authResult, NSError * _Nullable error) {
+                    if ([authResult user] != nil) {
+                        [self raiseEventForUser:[authResult user]];
+                    } else if (error != nil) {
+                        NSDictionary *data = nil;
+                        
+                        if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
+                            data = @{
+                                     @"code" : [error localizedFailureReason],
+                                     @"message" : [error localizedDescription]
+                                     };
+                        } else {
+                            
+                            data = @{
+                                     @"code" : @-1,
+                                     @"message" : @"Unknown failure reason"
+                                     };
+                        }
+                        
+                        [self raiseEvent:@"signinfailure" withData:data];
+                    }
+                }];
+            }
+        } else {
+            if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
+                data = @{
+                         @"code" : [error localizedFailureReason],
+                         @"message" : [error localizedDescription]
+                         };
+            } else {
+                
+                data = @{
+                         @"code" : @1,
+                         @"message" : @"Unknown failure reason"
+                         };
+            }
+            
+            [self raiseEvent:@"signinfailure" withData:data];
+        }
+    }
+}
+
+- (void)signInAnonymously:(CDVInvokedUrlCommand *)command {
+    @try {
+        [self signInAnonymous];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"SignOut error %@", [exception reason]);
+        @throw exception;
+    }
+}
+
 - (BOOL)application:(UIApplication *)app
 openURL:(NSURL *)url
 options:(NSDictionary *)options {
@@ -248,30 +311,6 @@ options:(NSDictionary *)options {
     @catch (NSException *exception) {
         NSLog(@"SignOut error %@", [exception reason]);
         @throw exception;
-    }
-}
-
-- (void)authUI:(nonnull FUIAuth *)authUI didSignInWithUser:(nullable FIRUser *)user error:(nullable NSError *)error {
-    if (error == nil) {
-        [self raiseEventForUser:user];
-    } else {
-
-        NSDictionary *data = nil;
-
-        if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
-            data = @{
-                    @"code" : [error localizedFailureReason],
-                    @"message" : [error localizedDescription]
-                    };
-        } else {
-
-          data = @{
-                  @"code" : @1,
-                  @"message" : @"Unknown failure reason"
-                  };
-        }
-
-        [self raiseEvent:@"signinfailure" withData:data];
     }
 }
 

@@ -7,6 +7,7 @@
 
 - (void)initialise:(CDVInvokedUrlCommand *)command;
 - (void)signIn:(CDVInvokedUrlCommand *)command;
+- (void)signInAnonymously:(CDVInvokedUrlCommand *)command;
 - (void)signOut:(CDVInvokedUrlCommand *)command;
 - (void)getToken:(CDVInvokedUrlCommand *)command;
 - (void)deleteUser:(CDVInvokedUrlCommand *)command;
