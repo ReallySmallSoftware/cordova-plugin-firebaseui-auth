@@ -319,7 +319,11 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
-## 1.-.0
+## 1.0.1
+- Update Firebase dependencies
+- Fix podspec for cordova-ios 5
+
+## 1.0.0
 - Major Android dependency update to 4.2.1
 - Breaking change around meaning of 'anonymous' configuration option
 - Add support for ANONYMOUS provider

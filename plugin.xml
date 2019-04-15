@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="0.0.10">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="1.0.1">
   <name>Firebase UI Authentication</name>
   <description>Adds support for Firebase Authentication to your Cordova/PhoneGap apps.</description>
   <license>Apache 2.0</license>
@@ -10,9 +10,9 @@
 
   <engines>
     <engine name="cordova" version=">=7.0.0" />
-    <engine name="cordova-android" version=">=5.0.0" />
+    <engine name="cordova-android" version=">=8.0.0" />
     <engine name="cordova-plugman" version=">=4.2.0" />
-    <engine name="cordova-ios" version=">=4.0.0" />
+    <engine name="cordova-ios" version=">=5.0.0" />
   </engines>
 
   <preference name="FACEBOOK_APPLICATION_ID" default="tbr"/>
@@ -89,9 +89,16 @@
     <header-file src="src/ios/FirebaseUIAuthPlugin.h"/>
     <source-file src="src/ios/FirebaseUIAuthPlugin.m"/>
 
-    <framework src="FirebaseUI/Auth" type="podspec" spec=""/>
-    <framework src="FirebaseUI/Google" type="podspec" spec=""/>
-    <framework src="FirebaseUI/Facebook" type="podspec" spec=""/>
+    <podspec>
+      <config>
+        <source url="https://github.com/CocoaPods/Specs.git"/>
+      </config>
+      <pods use-frameworks="true">
+        <pod name="FirebaseUI/Auth" />
+        <pod name="FirebaseUI/Google" />
+        <pod name="FirebaseUI/Facebook" />
+      </pods>
+    </podspec>
   </platform>
 
   <platform name="android">
@@ -106,11 +113,11 @@
       </feature>
     </config-file>
 
-    <preference name="ANDROID_FIREBASE_CORE_VERSION" default="16.0.4"/>
-    <preference name="ANDROID_FIREBASE_AUTH_VERSION" default="16.0.4"/>
+    <preference name="ANDROID_FIREBASE_CORE_VERSION" default="16.0.8"/>
+    <preference name="ANDROID_FIREBASE_AUTH_VERSION" default="16.2.1"/>
     <preference name="ANDROID_PLAY_SERVICES_AUTH_VERSION" default="16.0.1"/>
-    <preference name="ANDROID_FIREBASEUI_VERSION" default="4.2.1"/>
-    <preference name="ANDROID_FACEBOOK_SDK_VERSION" default="4.33.0"/>
+    <preference name="ANDROID_FIREBASEUI_VERSION" default="4.3.1"/>
+    <preference name="ANDROID_FACEBOOK_SDK_VERSION" default="4.41.0"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
     <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
