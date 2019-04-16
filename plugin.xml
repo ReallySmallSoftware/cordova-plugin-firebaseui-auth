@@ -97,6 +97,7 @@
         <pod name="FirebaseUI/Auth" />
         <pod name="FirebaseUI/Google" />
         <pod name="FirebaseUI/Facebook" />
+        <pod name="FirebaseUI/Email" />
       </pods>
     </podspec>
   </platform>

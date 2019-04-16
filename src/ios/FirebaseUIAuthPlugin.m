@@ -50,8 +50,6 @@
 
     if (providers != nil) {
 
-        BOOL emailHidden = true;
-
         for (NSString *provider in providers) {
             if ([provider isEqualToString:@"GOOGLE"]) {
                 [self.providers addObject:[[FUIGoogleAuth alloc] init]];
@@ -62,11 +60,9 @@
             }
 
             if ([provider isEqualToString:@"EMAIL"]) {
-                emailHidden = false;
+                [self.providers addObject:[[FUIEmailAuth alloc] init]];
             }
         }
-
-        [self.authUI setSignInWithEmailHidden:emailHidden];
 
         self.authUI.providers = self.providers;
     }
