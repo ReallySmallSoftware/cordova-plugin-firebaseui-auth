@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-firebaseui-auth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Adds support for Firebase UI authentication.",
   "repository": {
     "type": "git",
