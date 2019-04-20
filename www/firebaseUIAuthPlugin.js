@@ -20,6 +20,12 @@ function FirebaseUIAuth(options) {
     });
   };
 
+  this.getCurrentUser = function() {
+    return new Promise(function(resolve, reject) {
+      exec(resolve, reject, PLUGIN_NAME, 'getCurrentUser', []);
+    });
+  };
+
   this.signIn = function() {
     return exec(dispatchEvent, null, PLUGIN_NAME, 'signIn', []);
   };

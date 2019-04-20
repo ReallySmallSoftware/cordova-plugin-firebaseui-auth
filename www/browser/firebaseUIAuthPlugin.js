@@ -2,7 +2,7 @@
 /*jshint esversion: 6 */
 const PLUGIN_NAME = 'FirebaseUIAuth';
 
-var loadJS = function(url, loaded, implementationCode, location) {
+var loadJS = function (url, loaded, implementationCode, location) {
 
   if (!loaded) {
     var scriptTag = document.createElement('script');
@@ -17,7 +17,7 @@ var loadJS = function(url, loaded, implementationCode, location) {
   }
 };
 
-var loadCSS = function(url, loaded, implementationCode, location) {
+var loadCSS = function (url, loaded, implementationCode, location) {
   if (!loaded) {
     var linkTag = document.createElement('link');
     linkTag.href = url;
@@ -37,12 +37,12 @@ function FirebaseUIAuth(options, resolve) {
 
   var self = this;
 
-  var initialise = function() {
+  var initialise = function () {
     if (firebase.apps.length === 0) {
       firebase.initializeApp(options.browser);
     }
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
       self.signInSuccess(user);
     });
 
@@ -67,15 +67,15 @@ function FirebaseUIAuth(options, resolve) {
     }
   }
 
-  loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js', firebaseLoaded, function() {
-    loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-auth.js', firebaseAuthLoaded, function() {
-      loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function() {
+  loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js', firebaseLoaded, function () {
+    loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-auth.js', firebaseAuthLoaded, function () {
+      loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function () {
         loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', firebaseUILoaded, initialise, document.body);
       }, document.body);
     }, document.body);
   }, document.body);
 
-  this.buildProviders = function(optionProviders) {
+  this.buildProviders = function (optionProviders) {
 
     var providers = [];
     var i;
@@ -84,21 +84,21 @@ function FirebaseUIAuth(options, resolve) {
       if (optionProviders[i] === "GOOGLE") {
         providers.push(firebase.auth.GoogleAuthProvider.PROVIDER_ID);
       } else
-      if (optionProviders[i] === "FACEBOOK") {
-        providers.push(firebase.auth.FacebookAuthProvider.PROVIDER_ID);
-      } else
-      if (optionProviders[i] === "EMAIL") {
-        providers.push(firebase.auth.EmailAuthProvider.PROVIDER_ID);
-      }
+        if (optionProviders[i] === "FACEBOOK") {
+          providers.push(firebase.auth.FacebookAuthProvider.PROVIDER_ID);
+        } else
+          if (optionProviders[i] === "EMAIL") {
+            providers.push(firebase.auth.EmailAuthProvider.PROVIDER_ID);
+          }
     }
 
     return providers;
   };
 
-  this.buildUIConfig = function(options, providers) {
+  this.buildUIConfig = function (options, providers) {
     this.uiConfig = {
       callbacks: {
-        uiShown: function() {}
+        uiShown: function () { }
       },
       signInOptions: providers
     };
@@ -108,15 +108,15 @@ function FirebaseUIAuth(options, resolve) {
     }
   };
 
-  this.signInAnonymously = function() {
+  this.signInAnonymously = function () {
     if (this.anonymous === true) {
-      firebase.auth().signInAnonymously().catch(function(error) {
+      firebase.auth().signInAnonymously().catch(function (error) {
         alert(error.code + ":" + error.message);
       });
     }
   };
 
-  this.signInSuccess = function(user) {
+  this.signInSuccess = function (user) {
 
     if (user) {
       document.getElementById(this.uiElement).style.display = 'none';
@@ -129,17 +129,21 @@ function FirebaseUIAuth(options, resolve) {
     return false;
   };
 
-  this.reloadUser = function() {
+  this.reloadUser = function () {
 
     var self = this;
 
-    firebase.auth().currentUser.reload().then(function() {
+    firebase.auth().currentUser.reload().then(function () {
       self.raiseEventForUser(firebase.auth().currentUser);
     });
   };
 
-  this.raiseEventForUser = function(user) {
+  this.raiseEventForUser = function (user) {
+    var customEvent = new CustomEvent("signinsuccess", this._formatUser(user));
+    window.dispatchEvent(customEvent);
+  };
 
+  this._formatUser = function (user) {
     var newUser = false;
 
     if (user.metadata.creationTime === user.metadata.lastSignInTime) {
@@ -160,16 +164,45 @@ function FirebaseUIAuth(options, resolve) {
       detail.detail.photoUrl = user.photoURL;
     }
 
-    var customEvent = new CustomEvent("signinsuccess", detail);
-    window.dispatchEvent(customEvent);
+    return detail;
   };
 
-  this.getToken = function() {
+
+  this._formatEmptyUser = function (user) {
+
+    var detail = {
+      "detail": {
+        "name": null,
+        "email": null,
+        "emailVerified": false,
+        "id": null,
+        "newUser": false
+      }
+    };
+
+    return detail;
+  };
+
+  this.getToken = function () {
     var currentUser = firebase.auth().currentUser;
     return currentUser.getIdToken();
   };
 
-  this.signIn = function() {
+  this.getCurrentUser = function () {
+    var currentUser = firebase.auth().currentUser;
+    var formattedUser;
+    if (currentUser !== null) {
+      formattedUser = this._formatUser(currentUser);
+    } else {
+      formattedUser = this._formatEmptyUser();
+    }
+
+    return new Promise(function(resolve,reject) {
+      resolve(formattedUser);
+    })
+  };
+
+  this.signIn = function () {
 
     var currentUser = firebase.auth().currentUser;
 
@@ -198,28 +231,28 @@ function FirebaseUIAuth(options, resolve) {
     }
   };
 
-  this.sendEmailVerification = function() {
+  this.sendEmailVerification = function () {
 
     var currentUser = firebase.auth().currentUser;
     var customEvent;
 
-    currentUser.sendEmailVerification().then(function() {
+    currentUser.sendEmailVerification().then(function () {
       customEvent = new CustomEvent("emailverificationsent", {});
       window.dispatchEvent(customEvent);
-    }, function(error) {
+    }, function (error) {
       customEvent = new CustomEvent("emailverificationnotsent", {});
       window.dispatchEvent(customEvent);
     });
   };
 
-  this.signOut = function() {
+  this.signOut = function () {
     firebase.auth().signOut();
     var customEvent = new CustomEvent("signoutsuccess", {});
     window.dispatchEvent(customEvent);
     this.signInAnonymously();
   };
 
-  this.delete = function() {
+  this.delete = function () {
     var ui = firebaseui.auth.AuthUI.getInstance();
 
     if (ui === null) {
@@ -230,14 +263,14 @@ function FirebaseUIAuth(options, resolve) {
 
     var self = this;
 
-    currentUser.delete().then(function() {
+    currentUser.delete().then(function () {
       ui.delete();
 
       var customEvent = new CustomEvent("deleteusersuccess", {});
       window.dispatchEvent(customEvent);
       self.signInAnonymously();
 
-    }).catch(function(err) {
+    }).catch(function (err) {
       var customEvent = new CustomEvent("deleteuserfailure", {
         detail: {
           message: err.message
@@ -249,8 +282,8 @@ function FirebaseUIAuth(options, resolve) {
 }
 
 module.exports = {
-  initialise: function(options) {
-    return new Promise(function(resolve, reject) {
+  initialise: function (options) {
+    return new Promise(function (resolve, reject) {
       var db = new FirebaseUIAuth(options, resolve);
     });
   }

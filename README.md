@@ -221,6 +221,9 @@ Sign out failed for some reason.
 ## getToken()
 Get an access token, returning a Promise.
 
+## getCurrentUser()
+Get the currently signed in user.
+
 ## deleteUser()
 Delete the current user. This can raise the following events:
 

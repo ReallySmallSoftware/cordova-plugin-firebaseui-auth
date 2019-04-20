@@ -128,6 +128,29 @@
     }
 }
 
+- (void)getCurrentUser:(CDVInvokedUrlCommand *)command {
+
+    @try {
+        FIRUser *user = [[FIRAuth auth] currentUser];
+
+        if (user != nil) {
+
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self formatUser:user]];
+
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+        } else {
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
+        }
+    }
+    @catch (NSException *exception) {
+        NSLog(@"getToken error %@", [exception reason]);
+        @throw exception;
+    }
+}
+
 - (void)signIn:(CDVInvokedUrlCommand *)command {
 
     self.signInCallbackId = command.callbackId;
@@ -312,6 +335,13 @@ options:(NSDictionary *)options {
 
 - (void)raiseEventForUser:(FIRUser *)user {
 
+    NSDictionary *result = [self formatUser:user];
+
+    [self raiseEvent:@"signinsuccess" withData:result];
+}
+
+- (NSDictionary *)formatUser:(FIRUser *)user {
+
     NSDictionary *result;
 
     NSNumber *isEmailVerified;
@@ -354,7 +384,7 @@ options:(NSDictionary *)options {
                    };
     }
 
-    [self raiseEvent:@"signinsuccess" withData:result];
+    return result;
 }
 
 - (NSString *)emptyIfNull:(NSString *)value {

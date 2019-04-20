@@ -62,6 +62,8 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
             return deleteUser(callbackContext);
         } else if ("getToken".equals(action)) {
             return getToken(callbackContext);
+        } else if ("getCurrentUser".equals(action)) {
+            return getCurrentUser(callbackContext);
         } else if ("sendEmailVerification".equals(action)) {
             return sendEmailVerification(callbackContext);
         } else if ("reloadUser".equals(action)) {
@@ -415,6 +417,21 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         return true;
     }
 
+    private boolean getCurrentUser(final CallbackContext callbackContext) {
+
+        Log.d(TAG, "getToken");
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            callbackContext.success(this.formatUser(user));
+        } else {
+            callbackContext.success(this.formatEmptyUser());
+        }
+
+        return true;
+    }
+
     private void raiseErrorEvent(String event, int code, String message) {
         JSONObject data = new JSONObject();
         try {
@@ -430,6 +447,16 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
         final JSONObject resultData = new JSONObject();
 
         Log.d(TAG, "raiseEventForUser");
+
+        raiseEvent(callbackContext, "signinsuccess", this.formatUser(user));
+
+        Log.d(TAG, "raiseEventForUser: raised");
+    }
+
+    private JSONObject formatUser(FirebaseUser user) {
+        final JSONObject resultData = new JSONObject();
+
+        Log.d(TAG, "formatUser");
 
         try {
 
@@ -448,13 +475,30 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
                 resultData.put("photoUrl", user.getPhotoUrl().toString());
             }
         } catch (JSONException e) {
-            Log.e(TAG, "Error in raiseEventForUser ", e);
+            Log.e(TAG, "Error in formatUser ", e);
         }
 
-        raiseEvent(callbackContext, "signinsuccess", resultData);
+        return resultData;
+    }
 
-        Log.d(TAG, "raiseEventForUser: raised");
+    private JSONObject formatEmptyUser() {
+        final JSONObject resultData = new JSONObject();
 
+        Log.d(TAG, "formatEmptyUser");
+
+        try {
+
+            resultData.put("name", null);
+            resultData.put("email", null);
+            resultData.put("emailVerified", false);
+            resultData.put("id", null);
+            resultData.put("newUser", false);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Error in formatEmptyUser ", e);
+        }
+
+        return resultData;
     }
 
     private void raiseEvent(CallbackContext callbackContext, String type, Object data) {
