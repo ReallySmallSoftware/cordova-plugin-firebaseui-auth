@@ -119,7 +119,7 @@
         } else {
             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no_user_found"];
 
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     }
     @catch (NSException *exception) {
@@ -135,18 +135,18 @@
 
         if (user != nil) {
 
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self formatUser:user]];
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self formatUser:user]];
 
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
         } else {
-            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:[self formatEmptyUser]];
 
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.signInCallbackId];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     }
     @catch (NSException *exception) {
-        NSLog(@"getToken error %@", [exception reason]);
+        NSLog(@"getCurrentUser error %@", [exception reason]);
         @throw exception;
     }
 }
@@ -254,6 +254,9 @@ options:(NSDictionary *)options {
 - (void)signOut:(CDVInvokedUrlCommand *)command {
 
     @try {
+
+        self.signInCallbackId = command.callbackId;
+
         if ([self.authUI signOutWithError:nil]) {
             [self raiseEvent:@"signoutsuccess" withData:nil];
             [self signInAnonymous];
@@ -271,6 +274,8 @@ options:(NSDictionary *)options {
 
     @try {
         
+        self.signInCallbackId = command.callbackId;
+
         FIRUser *user = [[FIRAuth auth] currentUser];
         
         [user deleteWithCompletion:^(NSError * _Nullable error) {
@@ -298,6 +303,8 @@ options:(NSDictionary *)options {
 
     @try {
         
+        self.signInCallbackId = command.callbackId;
+
         FIRUser *user = [[FIRAuth auth] currentUser];
         
         [user sendEmailVerificationWithCompletion:^(NSError * _Nullable error) {
@@ -319,6 +326,8 @@ options:(NSDictionary *)options {
 
     @try {
         
+        self.signInCallbackId = command.callbackId;
+
         FIRUser *user = [[FIRAuth auth] currentUser];
         
         [user reloadWithCompletion:^(NSError * _Nullable error) {
@@ -347,9 +356,9 @@ options:(NSDictionary *)options {
     NSNumber *isEmailVerified;
 
     NSNumber *newUser;
-    
+
     self.anonymous = false;
-    
+
     if ([user isEmailVerified]) {
         isEmailVerified = @YES;
     } else {
@@ -357,10 +366,10 @@ options:(NSDictionary *)options {
     }
 
     FIRUserMetadata *metadata = [user metadata];
-    
+
     NSDate *lastSignInDate = [metadata lastSignInDate];
     NSDate *creationDate = [metadata creationDate];
-    
+
     if ([lastSignInDate compare:creationDate] == NSOrderedSame) {
         newUser = @YES;
     } else {
@@ -383,6 +392,20 @@ options:(NSDictionary *)options {
                    @"newUser" : newUser
                    };
     }
+
+    return result;
+}
+
+- (NSDictionary *)formatEmptyUser {
+
+    NSDictionary *result;
+
+    result = @{@"email" : (id)[NSNull null],
+               @"emailVerified" : @NO,
+               @"name" : (id)[NSNull null],
+               @"id" : (id)[NSNull null],
+               @"newUser" : @NO
+               };
 
     return result;
 }
