@@ -322,6 +322,9 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 1.2.0
+- Add getCurrentUser()
+
 ## 1.1.0
 - Update Firebase dependencies
 - Fix podspec for cordova-ios 5
