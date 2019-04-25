@@ -460,13 +460,13 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         try {
 
-            anonymous = false;
+            anonymous = user.isAnonymous();
 
             resultData.put("name", user.getDisplayName());
             resultData.put("email", user.getEmail());
             resultData.put("emailVerified", user.isEmailVerified());
             resultData.put("id", user.getUid());
-            if (user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
+            if (anonymous == false && user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
                 resultData.put("newUser", true);
             } else {
                 resultData.put("newUser", false);

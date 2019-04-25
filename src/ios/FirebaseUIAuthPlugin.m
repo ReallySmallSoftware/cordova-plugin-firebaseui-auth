@@ -357,7 +357,7 @@ options:(NSDictionary *)options {
 
     NSNumber *newUser;
 
-    self.anonymous = false;
+    self.anonymous = [user isAnonymous];
 
     if ([user isEmailVerified]) {
         isEmailVerified = @YES;
@@ -370,7 +370,7 @@ options:(NSDictionary *)options {
     NSDate *lastSignInDate = [metadata lastSignInDate];
     NSDate *creationDate = [metadata creationDate];
 
-    if ([lastSignInDate compare:creationDate] == NSOrderedSame) {
+    if (!self.anonymous && [lastSignInDate compare:creationDate] == NSOrderedSame) {
         newUser = @YES;
     } else {
         newUser = @NO;
