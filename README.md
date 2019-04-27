@@ -131,7 +131,8 @@ Create a new FirebaseAuthUI instance:
       "uiElement" : "mywebelement",
       "anonymous" : true|false,
       "smartLockEnabled" : true|false,
-      "smartLockHints" : true|false
+      "smartLockHints" : true|false,
+      "iOSDisable" : true | false
     }).then(function(firebaseUIAuth) {
       myfirebaseUIAuthInstance = firebaseUIAuth;
     });
@@ -150,6 +151,7 @@ Not all of the above options will function on all platforms:
 - anonymous : if true log in an anonymous user if other attempts fail (default false)
 - smartLockEnabled : enable SmartLock to store credentials - Android only (default true)
 - smartLockHints : enable SmartLock hints - Android only (default false)
+- iOSDisable : Turns off Google and Facebook providers on iOS 10 and earlier as there seems to be an issue on older iOS versions
 
 ## Browser configuration
 In order for the above initialisation to work on a browser you need to include some extra configuration in the form of the `browser` section show below:

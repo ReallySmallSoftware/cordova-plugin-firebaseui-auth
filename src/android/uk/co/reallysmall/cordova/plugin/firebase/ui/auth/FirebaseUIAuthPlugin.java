@@ -339,7 +339,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         Log.d(TAG, "signOut");
 
-        AuthUI.getInstance().signOut((FragmentActivity) cordova.getActivity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        AuthUI.getInstance().signOut(cordova.getActivity()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -377,7 +377,7 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
                         Log.d(TAG, "deleteUser: success");
 
-                        AuthUI.getInstance().delete((FragmentActivity) cordova.getActivity());
+                        AuthUI.getInstance().delete( cordova.getActivity());
                         raiseEvent(callbackContext, "deleteusersuccess", null);
 
                         plugin.signInAnonymous(firebaseAuth);
@@ -460,13 +460,13 @@ public class FirebaseUIAuthPlugin extends CordovaPlugin implements OnCompleteLis
 
         try {
 
-            anonymous = user.isAnonymous();
+            anonymous = false;
 
             resultData.put("name", user.getDisplayName());
             resultData.put("email", user.getEmail());
             resultData.put("emailVerified", user.isEmailVerified());
             resultData.put("id", user.getUid());
-            if (anonymous == false && user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
+            if (user.getMetadata().getCreationTimestamp() == user.getMetadata().getLastSignInTimestamp()) {
                 resultData.put("newUser", true);
             } else {
                 resultData.put("newUser", false);

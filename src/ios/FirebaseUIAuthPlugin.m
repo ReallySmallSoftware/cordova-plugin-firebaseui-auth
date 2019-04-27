@@ -48,17 +48,19 @@
 
     NSArray *providers = [options valueForKey:@"providers"];
 
+    NSNumber *iOSDisable = [options valueForKey:@"iOSDisable"];
+
     if (providers != nil) {
 
         for (NSString *provider in providers) {
-            if (@available(iOS 11.0, *)) {
+            if (@available(iOS 11.0, *) || ![iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]]) {
                 if ([provider isEqualToString:@"GOOGLE"]) {
                     [self.providers addObject:[[FUIGoogleAuth alloc] init]];
                 }
-            }
 
-            if ([provider isEqualToString:@"FACEBOOK"]) {
-                [self.providers addObject:[[FUIFacebookAuth alloc] init]];
+                if ([provider isEqualToString:@"FACEBOOK"]) {
+                    [self.providers addObject:[[FUIFacebookAuth alloc] init]];
+                }
             }
 
             if ([provider isEqualToString:@"EMAIL"]) {
