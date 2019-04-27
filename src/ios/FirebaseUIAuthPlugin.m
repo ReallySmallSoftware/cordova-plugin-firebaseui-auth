@@ -51,8 +51,10 @@
     if (providers != nil) {
 
         for (NSString *provider in providers) {
-            if ([provider isEqualToString:@"GOOGLE"]) {
-                [self.providers addObject:[[FUIGoogleAuth alloc] init]];
+            if (@available(iOS 11.0, *)) {
+                if ([provider isEqualToString:@"GOOGLE"]) {
+                    [self.providers addObject:[[FUIGoogleAuth alloc] init]];
+                }
             }
 
             if ([provider isEqualToString:@"FACEBOOK"]) {
