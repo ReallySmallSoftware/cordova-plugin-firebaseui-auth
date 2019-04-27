@@ -327,6 +327,7 @@ In order to ensure the browser implementation works, it will be necessary to con
 
 ## 1.2.0
 - Add getCurrentUser()
+- Fix callback bug on iOS if login failed
 
 ## 1.1.0
 - Update Firebase dependencies
