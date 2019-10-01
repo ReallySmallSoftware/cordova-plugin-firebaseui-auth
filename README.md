@@ -324,6 +324,9 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 1.4.0
+- Update Facebook dependency version for Android
+
 ## 1.3.0
 - Disable Google auth for earlier than iOS 11 - seems to be an issue with FirebaseUI
 
