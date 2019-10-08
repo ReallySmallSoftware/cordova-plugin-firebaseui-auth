@@ -324,6 +324,9 @@ In order to ensure the browser implementation works, it will be necessary to con
 ```
 
 # History
+## 1.5.0
+- Add types
+
 ## 1.4.0
 - Update Facebook dependency version for Android
 
