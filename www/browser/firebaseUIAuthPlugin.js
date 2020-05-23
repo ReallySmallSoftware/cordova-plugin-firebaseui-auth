@@ -67,10 +67,10 @@ function FirebaseUIAuth(options, resolve) {
     }
   }
 
-  loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-app.js', firebaseLoaded, function () {
-    loadJS('https://www.gstatic.com/firebasejs/5.5.0/firebase-auth.js', firebaseAuthLoaded, function () {
-      loadJS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.js', firebaseUILoaded, function () {
-        loadCSS('https://cdn.firebase.com/libs/firebaseui/2.5.1/firebaseui.css', firebaseUILoaded, initialise, document.body);
+  loadJS('https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js', firebaseLoaded, function () {
+    loadJS('https://www.gstatic.com/firebasejs/7.14.0/firebase-auth.js', firebaseAuthLoaded, function () {
+      loadJS('https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.js', firebaseUILoaded, function () {
+        loadCSS('https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css', firebaseUILoaded, initialise, document.body);
       }, document.body);
     }, document.body);
   }, document.body);
@@ -83,13 +83,13 @@ function FirebaseUIAuth(options, resolve) {
     for (i = 0; i < optionProviders.length; i++) {
       if (optionProviders[i] === "GOOGLE") {
         providers.push(firebase.auth.GoogleAuthProvider.PROVIDER_ID);
-      } else
-        if (optionProviders[i] === "FACEBOOK") {
-          providers.push(firebase.auth.FacebookAuthProvider.PROVIDER_ID);
-        } else
-          if (optionProviders[i] === "EMAIL") {
-            providers.push(firebase.auth.EmailAuthProvider.PROVIDER_ID);
-          }
+      } else if (optionProviders[i] === "FACEBOOK") {
+        providers.push(firebase.auth.FacebookAuthProvider.PROVIDER_ID);
+      } else if (optionProviders[i] === "EMAIL") {
+        providers.push(firebase.auth.EmailAuthProvider.PROVIDER_ID);
+      } else if (optionProviders[i] === "apple.com") {
+        providers.push("apple.com");
+      }
     }
 
     return providers;
@@ -197,7 +197,7 @@ function FirebaseUIAuth(options, resolve) {
       formattedUser = this._formatEmptyUser();
     }
 
-    return new Promise(function(resolve,reject) {
+    return new Promise(function (resolve, reject) {
       resolve(formattedUser);
     })
   };
@@ -259,10 +259,7 @@ function FirebaseUIAuth(options, resolve) {
       ui = new firebaseui.auth.AuthUI(firebase.auth());
     }
 
-    var currentUser = firebase.auth().currentUser;
-
-    var self = this;
-
+    var currentUser = firebase.auth().currentUser; 0
     currentUser.delete().then(function () {
       ui.delete();
 

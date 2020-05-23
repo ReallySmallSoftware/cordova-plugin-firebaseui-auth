@@ -1,11 +1,11 @@
-
-
 declare namespace FirebaseUIAuth {
+
     export interface FirebaseUIAuthUserDetail {
         name: string | null;
         email: string | null;
         emailVerified: boolean;
         id: string | null;
+        photoUrl: string | null;
         newUser: boolean;
     }
 
@@ -28,11 +28,10 @@ declare namespace FirebaseUIAuth {
         browser?: any;
     }
 
-    export function initialise(options: FirebaseUIAuthOptions): Promise<void>;
-
+    export function initialise(options: FirebaseUIAuthOptions): Promise<FirebaseUIAuth>;
     export interface FirebaseUIAuth {
 
-        getToken(): string;
+        getToken(): Promise<string>;
         getCurrentUser(): Promise<FirebaseUIAuthUser>;
         signIn(): void;
         signInAnonymously(): void;

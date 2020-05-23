@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="1.4.0">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-firebaseui-auth" version="3.0.0">
   <name>Firebase UI Authentication</name>
   <description>Adds support for Firebase Authentication to your Cordova/PhoneGap apps.</description>
   <license>Apache 2.0</license>
@@ -97,6 +97,7 @@
         <pod name="FirebaseUI/Auth" />
         <pod name="FirebaseUI/Google" />
         <pod name="FirebaseUI/Facebook" />
+        <pod name="FirebaseUI/OAuth" />
         <pod name="FirebaseUI/Email" />
       </pods>
     </podspec>
@@ -114,11 +115,10 @@
       </feature>
     </config-file>
 
-    <preference name="ANDROID_FIREBASE_CORE_VERSION" default="16.0.8"/>
-    <preference name="ANDROID_FIREBASE_AUTH_VERSION" default="16.2.1"/>
-    <preference name="ANDROID_PLAY_SERVICES_AUTH_VERSION" default="16.0.1"/>
-    <preference name="ANDROID_FIREBASEUI_VERSION" default="4.3.1"/>
-    <preference name="ANDROID_FACEBOOK_SDK_VERSION" default="5.6"/>
+    <preference name="ANDROID_FIREBASE_AUTH_VERSION" default="19.3.1"/>
+    <preference name="ANDROID_PLAY_SERVICES_AUTH_VERSION" default="18.0.0"/>
+    <preference name="ANDROID_FIREBASEUI_VERSION" default="6.2.0"/>
+    <preference name="ANDROID_FACEBOOK_SDK_VERSION" default="6.5.1"/>
     <preference name="COLOR_PRIMARY" default="#ffffff"/>
     <preference name="COLOR_DARK_PRIMARY" default="#555555"/>
     <preference name="COLOR_LIGHT_PRIMARY" default="#aaaaaa"/>
@@ -130,7 +130,6 @@
     <framework src="com.firebaseui:firebase-ui-auth:$ANDROID_FIREBASEUI_VERSION"/>
     <framework src="com.facebook.android:facebook-android-sdk:$ANDROID_FACEBOOK_SDK_VERSION"/>
     <framework src="com.google.android.gms:play-services-auth:$ANDROID_PLAY_SERVICES_AUTH_VERSION"/>
-    <framework src="com.google.firebase:firebase-core:$ANDROID_FIREBASE_CORE_VERSION"/>
     <framework src="com.google.firebase:firebase-auth:$ANDROID_FIREBASE_AUTH_VERSION"/>
 
     <source-file src="src/android/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/FirebaseUIAuthPlugin.java" target-dir="src/uk/co/reallysmall/cordova/plugin/firebase/ui/auth/"/>

@@ -322,8 +322,36 @@ In order to ensure the browser implementation works, it will be necessary to con
                         https://*.firebase.com
                         https://*.firebaseio.com">
 ```
+## Typescript
+Support is now included for typescript. Use the following to reference the typescript definitions:
+
+```
+/// <reference types="cordova-plugin-firebaseui-auth" />
+
+FirebaseUIAuth.initialise(options)
+    .then((firebaseUIAuth: FirebaseUIAuth.FirebaseUIAuth) => {
+        firebaseUIAuth.signIn();
+    });
+```
+
+You may also need to add an external to webpack.config.ls:
+
+```
+  externals: {
+    'cordova/exec': "cordova/exec"
+  },
+```
 
 # History
+## 3.0.0
+- Add support for Apple sign in
+- Update Android dependencies
+- Update web dependencies
+
+## 2.0.0
+- Remove firebase core and update dependencies
+- Refine types
+
 ## 1.5.0
 - Add types
 

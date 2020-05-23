@@ -61,6 +61,10 @@
                 if ([provider isEqualToString:@"FACEBOOK"]) {
                     [self.providers addObject:[[FUIFacebookAuth alloc] init]];
                 }
+
+                if ([provider isEqualToString:@"apple.com"]) {
+                    [self.providers addObject:[[appleAuthProvider alloc] init]];
+                }
             }
 
             if ([provider isEqualToString:@"EMAIL"]) {
