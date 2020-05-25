@@ -53,17 +53,21 @@
     if (providers != nil) {
 
         for (NSString *provider in providers) {
-            if (@available(iOS 11.0, *) || ![iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-                if ([provider isEqualToString:@"GOOGLE"]) {
-                    [self.providers addObject:[[FUIGoogleAuth alloc] init]];
-                }
+            if (@available(iOS 11.0, *)) {
+                if (![iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+                    if ([provider isEqualToString:@"GOOGLE"]) {
+                        [self.providers addObject:[[FUIGoogleAuth alloc] init]];
+                    }
 
-                if ([provider isEqualToString:@"FACEBOOK"]) {
-                    [self.providers addObject:[[FUIFacebookAuth alloc] init]];
+                    if ([provider isEqualToString:@"FACEBOOK"]) {
+                        [self.providers addObject:[[FUIFacebookAuth alloc] init]];
+                    }
                 }
-
+            }
+            
+            if (@available(iOS 13.0, *)) {
                 if ([provider isEqualToString:@"apple.com"]) {
-                    [self.providers addObject:[[appleAuthProvider alloc] init]];
+                    [self.providers addObject:[FUIOAuth appleAuthProvider]];
                 }
             }
 
