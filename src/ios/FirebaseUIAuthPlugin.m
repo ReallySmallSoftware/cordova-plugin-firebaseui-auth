@@ -53,15 +53,20 @@
     if (providers != nil) {
 
         for (NSString *provider in providers) {
+            
+            Boolean google = [iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]];
+            
             if (@available(iOS 11.0, *)) {
-                if (![iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-                    if ([provider isEqualToString:@"GOOGLE"]) {
-                        [self.providers addObject:[[FUIGoogleAuth alloc] init]];
-                    }
+                google = true;
+            }
+            
+            if (google) {
+                if ([provider isEqualToString:@"GOOGLE"]) {
+                    [self.providers addObject:[[FUIGoogleAuth alloc] init]];
+                }
 
-                    if ([provider isEqualToString:@"FACEBOOK"]) {
-                        [self.providers addObject:[[FUIFacebookAuth alloc] init]];
-                    }
+                if ([provider isEqualToString:@"FACEBOOK"]) {
+                    [self.providers addObject:[[FUIFacebookAuth alloc] init]];
                 }
             }
             
@@ -204,7 +209,7 @@
             FIRAuthCredential *authCredential = [error.userInfo valueForKey:FUIAuthCredentialKey];
             
             if (authCredential != nil) {
-                [[FIRAuth auth] signInAndRetrieveDataWithCredential:authCredential completion:^(FIRAuthDataResult * _Nullable authResult, NSError * _Nullable error) {
+                [[FIRAuth auth] signInWithCredential:authCredential completion:^(FIRAuthDataResult * _Nullable authResult, NSError * _Nullable error) {
                     if ([authResult user] != nil) {
                         [self raiseEventForUser:[authResult user]];
                     } else if (error != nil) {
@@ -226,6 +231,7 @@
                         [self raiseEvent:@"signinfailure" withData:data];
                     }
                 }];
+                
             }
         } else {
             if (error.localizedFailureReason != nil && error.localizedDescription != nil) {
