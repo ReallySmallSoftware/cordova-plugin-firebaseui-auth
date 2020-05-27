@@ -54,6 +54,17 @@
       </array>
     </config-file>
 
+    <config-file target="*-Debug.plist" parent="com.apple.developer.applesignin">
+      <array>
+        <string>Default</string>
+      </array>
+    </config-file>
+    <config-file target="*-Release.plist" parent="com.apple.developer.applesignin">
+      <array>
+        <string>Default</string>
+      </array>
+    </config-file>
+
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>
