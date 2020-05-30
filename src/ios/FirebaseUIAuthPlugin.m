@@ -54,7 +54,7 @@
 
         for (NSString *provider in providers) {
             
-            Boolean google = [iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]];
+            Boolean google = ![iOSDisable isEqualToNumber:[NSNumber numberWithBool:YES]];
             
             if (@available(iOS 11.0, *)) {
                 google = true;
