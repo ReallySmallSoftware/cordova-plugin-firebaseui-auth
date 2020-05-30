@@ -13,7 +13,7 @@ declare namespace FirebaseUIAuth {
         detail: FirebaseUIAuthUserDetail;
     }
 
-    export type FirebaseUIAuthOptionsProviders = "EMAIL" | "FACEBOOK" | "GOOGLE" | "PHONE" | "TWITTER" | "GITHUB" | "ANONYMOUS";
+    export type FirebaseUIAuthOptionsProviders = "EMAIL" | "FACEBOOK" | "GOOGLE" | "PHONE" | "TWITTER" | "GITHUB" | "ANONYMOUS" | "apple.com";
 
     export interface FirebaseUIAuthOptions {
         anonymous?: boolean;
